@@ -1,3 +1,22 @@
+mailhog:
+  image: mailhog/mailhog
+  ports:
+    - "8025:8025"
+
+neo4j:
+  image: neo4j/neo4j
+  volumes:
+    - /data/dev/immercv/neo4j:/data
+  ulimits:
+    nofile:
+      soft: 40000
+      hard: 40000
+  environment:
+    NEO4J_AUTH: neo4j/password
+  ports:
+    - "7473:7473"
+    - "7474:7474"
+
 postgres:
   image: postgres
   volumes:
@@ -14,4 +33,6 @@ django:
   ports:
     - "8000:8000"
   links:
+    - mailhog
+    - neo4j
     - postgres

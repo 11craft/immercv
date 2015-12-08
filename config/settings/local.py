@@ -23,7 +23,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY", default='s_%g+y+#x-f7i64$d35w&1h_^9!)^dc)3
 
 # Mail settings
 # ------------------------------------------------------------------------------
-EMAIL_HOST = 'localhost'
+EMAIL_HOST = 'mailhog'
 EMAIL_PORT = 1025
 
 
