@@ -12,7 +12,7 @@
     <h2>Notes</h2>
   {% endif %}
   {% if user.is_authenticated %}
-    {% cvgraph_node_creator person "notes" "text" "date" %}
+    {% cvgraph_node_creator person "notes"%}
   {% endif %}
   {% for note in person.notes %}
     <div class="card">
@@ -26,7 +26,7 @@
       {% endif %}
       {% if user.is_authenticated %}
         <div class="card-block">
-          {% cvgraph_prop_editor note "text" "date" %}
+          {% cvgraph_prop_editor note %}
           {% cvgraph_node_deleter note %}
         </div>
       {% endif %}
