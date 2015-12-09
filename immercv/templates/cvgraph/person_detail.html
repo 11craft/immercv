@@ -25,6 +25,7 @@
       {% if user.is_authenticated %}
         <div class="card-block">
           {% cvgraph_prop_editor note "text" "date" %}
+          {% cvgraph_node_deleter note %}
         </div>
       {% endif %}
     </div>

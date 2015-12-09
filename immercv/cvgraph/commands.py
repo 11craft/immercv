@@ -43,6 +43,12 @@ def set_node_properties_from_params(node, params):
         setattr(node, k, v)
 
 
+@command(':Note', 'delete')
+def delete_note(request, params, node_id):
+    note = get_by_id(Note, node_id)
+    note.delete()
+
+
 @command(':Note', 'update')
 def update_note(request, params, node_id):
     note = get_by_id(Note, node_id)
