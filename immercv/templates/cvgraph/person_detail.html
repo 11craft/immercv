@@ -1,5 +1,5 @@
 {% extends "cvgraph/base.html" %}
-{% load cvgraph_tags %}
+{% load cvgraph_tags markdown_deux_tags %}
 
 {% block content %}
 
@@ -15,7 +15,7 @@
   {% for note in person.notes %}
     <div class="card">
       <div class="card-block">
-        {{ note.text }}
+        {{ note.text|markdown }}
       </div>
       {% if note.date %}
         <div class="card-block">
