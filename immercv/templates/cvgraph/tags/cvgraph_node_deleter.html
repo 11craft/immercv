@@ -1,0 +1,19 @@
+
+{% load crispy_forms_tags %}
+<div class="cvgraph-prop-editor">
+  <button type="button" class="btn btn-secondary btn-sm" data-property-editor="true">
+    <span class="octicon octicon-trashcan"></span>
+  </button>
+  <form style="display:none" action="{% url 'cvgraph:change' %}" class="form-horizontal" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="_labels" value="{{ labels }}"/>
+    <input type="hidden" name="_id" value="{{ node_id }}"/>
+    <input type="hidden" name="_operation" value="delete"/>
+    <p>Are you sure you want to delete this?</p>
+    <div class="control-group">
+      <div class="controls">
+        <button type="submit" class="btn">Confirm</button>
+      </div>
+    </div>
+  </form>
+</div>
