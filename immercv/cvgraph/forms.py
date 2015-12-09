@@ -1,6 +1,8 @@
 from django import forms
 from neomodel import DateProperty, IntegerProperty, StringProperty
 
+from immercv.cvgraph.models import Note
+
 
 PROPERTY_TYPE_FIELDS = {
     # property-type: form-field-type,
@@ -10,15 +12,24 @@ PROPERTY_TYPE_FIELDS = {
 }
 
 
-def field_for_node_property(node_or_class, property_name, **kwargs):
+NODE_CLASS_FIELD_WIDGETS = {
+    # node-property: field-widget,
+    Note.text: forms.Textarea,
+}
+
+
+def field_for_node_property(node_or_class, property_name):
     if isinstance(node_or_class, type):
         node_class = node_or_class
     else:
         node_class = node_or_class.__class__
     property = getattr(node_class, property_name)
     property_type = type(property)
-    kwargs['required'] = kwargs.pop('required', property.required)
-    return PROPERTY_TYPE_FIELDS[property_type](**kwargs)
+    field_class = PROPERTY_TYPE_FIELDS[property_type]
+    return field_class(
+        required=property.required,
+        widget=NODE_CLASS_FIELD_WIDGETS.get(property),
+    )
 
 
 def form_for_node_properties(node_or_class, property_names, data=None):
