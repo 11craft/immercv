@@ -17,4 +17,9 @@ urlpatterns = [
         view=views.CvgraphPersonDetailView.as_view(),
         name='person_detail',
     ),
+    url(
+        regex=r'^change/$',
+        view=views.CvgraphChangeView.as_view(),
+        name='change',
+    ),
 ]

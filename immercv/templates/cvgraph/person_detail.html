@@ -1,5 +1,9 @@
 {% extends "cvgraph/base.html" %}
+{% load cvgraph_tags %}
 
 {% block content %}
-  <p>Person {{ person.name }}.</p>
+
+  <h1>{{ person.name }}</h1>
+  {% cvgraph_prop_editor person "name" %}
+
 {% endblock %}

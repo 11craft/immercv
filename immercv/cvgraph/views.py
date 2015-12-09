@@ -1,9 +1,9 @@
 from django.core.urlresolvers import reverse
+from django.http import Http404
 from django.utils.text import slugify
 from django.views.generic import RedirectView, TemplateView
-from neomodel import db
 
-from immercv.cvgraph.models import get_by_id, Person
+from immercv.cvgraph.models import get_by_id, Person, apply_change
 
 
 class CvgraphMeView(RedirectView):
@@ -30,3 +30,16 @@ class CvgraphPersonDetailView(TemplateView):
         person = get_by_id(Person, int(self.kwargs['id']))
         data.update(person=person)
         return data
+
+
+class CvgraphChangeView(RedirectView):
+
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        if self.request.method != 'POST':
+            raise Http404()
+        else:
+            params = self.request.POST.copy()
+            apply_change(self.request, params)
+            return self.request.META['HTTP_REFERER']
