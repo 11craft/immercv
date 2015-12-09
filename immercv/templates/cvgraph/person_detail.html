@@ -9,6 +9,9 @@
   {% endif %}
 
   <h2>Notes</h2>
+  {% if user.is_authenticated %}
+    {% cvgraph_node_creator person "notes" "text" "date" %}
+  {% endif %}
   {% for note in person.notes %}
     <div class="card">
       <div class="card-block">
