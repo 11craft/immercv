@@ -29,7 +29,7 @@ postgres:
 django:
   dockerfile: Dockerfile-dev
   build: .
-  command: python /app/manage.py runserver_plus 0.0.0.0:8000
+  command: bash -c "source check_up_containers.bash; check_up postgres postgres 5432; check_up neo4j neo4j 7474; python /app/manage.py runserver_plus 0.0.0.0:8000"
   volumes:
     - .:/app
   ports:
