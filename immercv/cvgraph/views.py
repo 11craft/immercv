@@ -3,7 +3,8 @@ from django.http import Http404
 from django.utils.text import slugify
 from django.views.generic import RedirectView, TemplateView
 
-from immercv.cvgraph.models import get_by_id, Person, apply_change
+from immercv.cvgraph.commands import apply_command
+from immercv.cvgraph.models import get_by_id, Person
 
 
 class CvgraphMeView(RedirectView):
@@ -41,5 +42,5 @@ class CvgraphChangeView(RedirectView):
             raise Http404()
         else:
             params = self.request.POST.copy()
-            apply_change(self.request, params)
+            apply_command(self.request, params)
             return self.request.META['HTTP_REFERER']

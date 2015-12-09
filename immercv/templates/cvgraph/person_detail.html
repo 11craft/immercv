@@ -4,6 +4,27 @@
 {% block content %}
 
   <h1>{{ person.name }}</h1>
-  {% cvgraph_prop_editor person "name" %}
+  {% if user.is_authenticated %}
+    {% cvgraph_prop_editor person "name" %}
+  {% endif %}
+
+  <h2>Notes</h2>
+  {% for note in person.notes %}
+    <div class="card">
+      <div class="card-block">
+        {{ note.text }}
+      </div>
+      {% if note.date %}
+        <div class="card-block">
+          {{ note.date }}
+        </div>
+      {% endif %}
+      {% if user.is_authenticated %}
+        <div class="card-block">
+          {% cvgraph_prop_editor note "text" "date" %}
+        </div>
+      {% endif %}
+    </div>
+  {% endfor %}
 
 {% endblock %}
