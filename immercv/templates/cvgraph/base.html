@@ -1,1 +1,8 @@
 {% extends "base.html" %}
+
+{% block navbar_items %}
+  {{ block.super }}
+  <li class="nav-item">
+    <button id="preview-toggle" class="btn btn-primary-outline">Preview</button>
+  </li>
+{% endblock %}
