@@ -1,14 +1,19 @@
 
 {% load crispy_forms_tags %}
-<form action="{% url 'cvgraph:change' %}" class="form-horizontal" method="post">
-  {% csrf_token %}
-  <input type="hidden" name="_labels" value="{{ labels }}"/>
-  <input type="hidden" name="_id" value="{{ node_id }}"/>
-  <input type="hidden" name="_operation" value="update"/>
-  {{ form|crispy }}
-  <div class="control-group">
-    <div class="controls">
-      <button type="submit" class="btn">Save</button>
+<div class="cvgraph-prop-editor">
+  <button type="button" class="btn btn-secondary btn-sm" data-property-editor="true">
+    <span class="octicon octicon-pencil"></span>
+  </button>
+  <form action="{% url 'cvgraph:change' %}" class="form-horizontal" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="_labels" value="{{ labels }}"/>
+    <input type="hidden" name="_id" value="{{ node_id }}"/>
+    <input type="hidden" name="_operation" value="update"/>
+    {{ form|crispy }}
+    <div class="control-group">
+      <div class="controls">
+        <button type="submit" class="btn">Save</button>
+      </div>
     </div>
-  </div>
-</form>
+  </form>
+</div>
