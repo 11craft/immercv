@@ -5,7 +5,7 @@ EDITABLE_PROPERTIES = {
     # labels: {property-name, ...},
     ':Note': {'text', 'date'},
     ':Person': {'name'},
-    ':Project': {'name'},
+    ':Project': {'name', 'description'},
 }
 
 
@@ -64,3 +64,4 @@ class Person(StructuredNode):
 class Project(StructuredNode):
 
     name = StringProperty(required=True)
+    description = StringProperty()

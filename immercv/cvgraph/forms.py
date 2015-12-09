@@ -1,7 +1,7 @@
 from django import forms
 from neomodel import DateProperty, IntegerProperty, StringProperty
 
-from immercv.cvgraph.models import Note
+from immercv.cvgraph.models import Note, Project
 
 
 PROPERTY_TYPE_FIELDS = {
@@ -15,6 +15,7 @@ PROPERTY_TYPE_FIELDS = {
 NODE_CLASS_FIELD_WIDGETS = {
     # node-property: field-widget,
     Note.text: forms.Textarea,
+    Project.description: forms.Textarea,
 }
 
 

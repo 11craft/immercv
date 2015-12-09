@@ -15,22 +15,20 @@
     {% cvgraph_node_creator person "projects" %}
   {% endif %}
   {% for project in person.projects %}
-    <div class="card">
-      <div class="card-block">
-        <h3>{{ project.name }}</h3>
-      </div>
-      <div class="card-block">
-        <a href="#">More about {{ project.name }}</a>
-      </div>
-      {% if user.is_authenticated %}
-        <div class="card-block">
-          {% cvgraph_prop_editor project %}
-          {% cvgraph_node_deleter project %}
+    <div class="card card-block">
+      <h4 class="card-title">{{ project.name }}</h4>
+      {% if project.description %}
+        <div class="card-text">
+          {{ project.description|markdown }}
         </div>
+      {% endif %}
+      <a href="#" class="card-link">More about {{ project.name }}</a>
+      {% if user.is_authenticated %}
+        {% cvgraph_prop_editor project %}
+        {% cvgraph_node_deleter project %}
       {% endif %}
     </div>
   {% endfor %}
-
 
   {% if person.notes %}
     <h2>Notes</h2>
@@ -39,20 +37,16 @@
     {% cvgraph_node_creator person "notes"%}
   {% endif %}
   {% for note in person.notes %}
-    <div class="card">
-      <div class="card-block">
+    <div class="card card-block">
+      <div class="card-text">
         {{ note.text|markdown }}
       </div>
       {% if note.date %}
-        <div class="card-block">
-          {{ note.date }}
-        </div>
+        <p class="card-text text-muted">{{ note.date }}</p>
       {% endif %}
       {% if user.is_authenticated %}
-        <div class="card-block">
-          {% cvgraph_prop_editor note %}
-          {% cvgraph_node_deleter note %}
-        </div>
+        {% cvgraph_prop_editor note %}
+        {% cvgraph_node_deleter note %}
       {% endif %}
     </div>
   {% endfor %}
