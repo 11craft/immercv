@@ -8,7 +8,9 @@
     {% cvgraph_prop_editor person "name" %}
   {% endif %}
 
-  <h2>Notes</h2>
+  {% if person.notes %}
+    <h2>Notes</h2>
+  {% endif %}
   {% if user.is_authenticated %}
     {% cvgraph_node_creator person "notes" "text" "date" %}
   {% endif %}
