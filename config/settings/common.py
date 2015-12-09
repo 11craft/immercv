@@ -221,6 +221,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # Some really nice defaults
+ACCOUNT_ADAPTER = 'immercv.users.account_adapter.NoSignupAccountAdapter'
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
