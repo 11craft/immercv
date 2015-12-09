@@ -15,7 +15,6 @@ def apply_command(request, properties):
     operation = properties.pop('_operation')[0]
     relationship_name = properties.pop('_relationship_name', [None])[0]
     key = (labels, operation, relationship_name)
-    print(key)
     fn = COMMAND_FUNCTIONS.get(key)
     if callable(fn):
         fn(request, properties, node_id)
