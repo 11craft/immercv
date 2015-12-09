@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 <div class="cvgraph-prop-editor">
   <button type="button" class="btn btn-secondary btn-sm" data-property-editor="true">
-    <span class="octicon octicon-plus"></span>
+    <span class="octicon octicon-plus"></span>&nbsp;{{ labels }}&nbsp;{{ relationship_name }}
   </button>
   <form style="display:none" action="{% url 'cvgraph:change' %}" class="form-horizontal" method="post">
     {% csrf_token %}
