@@ -4,7 +4,7 @@ from django.utils.text import slugify
 from django.views.generic import RedirectView, TemplateView
 
 from immercv.cvgraph.commands import apply_command
-from immercv.cvgraph.models import get_by_id, Person
+from immercv.cvgraph.models import get_by_id, Person, Project
 
 
 class CvgraphMeView(RedirectView):
@@ -30,6 +30,17 @@ class CvgraphPersonDetailView(TemplateView):
         data = super().get_context_data(**kwargs)
         person = get_by_id(Person, int(self.kwargs['id']))
         data.update(person=person)
+        return data
+
+
+class CvgraphProjectDetailView(TemplateView):
+
+    template_name = 'cvgraph/project_detail.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        project = get_by_id(Project, int(self.kwargs['id']))
+        data.update(project=project)
         return data
 
 

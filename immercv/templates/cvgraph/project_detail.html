@@ -1,0 +1,15 @@
+{% extends "cvgraph/base.html" %}
+{% load cvgraph_tags markdown_deux_tags %}
+
+{% block content %}
+
+  <h1>{{ project.name }}</h1>
+  {% if user.is_authenticated %}
+    {% cvgraph_prop_editor project %}
+  {% endif %}
+
+  {% if project.description %}
+    {{ project.description|markdown }}
+  {% endif %}
+
+{% endblock %}

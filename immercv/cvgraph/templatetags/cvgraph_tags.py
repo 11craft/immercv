@@ -6,6 +6,11 @@ from immercv.cvgraph.models import label_string, EDITABLE_PROPERTIES
 register = template.Library()
 
 
+@register.filter
+def node_id(node):
+    return node._id
+
+
 @register.inclusion_tag('cvgraph/tags/cvgraph_node_creator.html')
 def cvgraph_node_creator(node, relationship_name, *property_names):
     labels = label_string(node.labels())

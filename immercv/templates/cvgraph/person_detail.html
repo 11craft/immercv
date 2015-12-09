@@ -8,27 +8,29 @@
     {% cvgraph_prop_editor person "name" %}
   {% endif %}
 
-  {% if person.projects %}
-    <h2>Projects</h2>
-  {% endif %}
-  {% if user.is_authenticated %}
-    {% cvgraph_node_creator person "projects" %}
-  {% endif %}
-  {% for project in person.projects %}
-    <div class="card card-block">
-      <h4 class="card-title">{{ project.name }}</h4>
-      {% if project.description %}
-        <div class="card-text">
-          {{ project.description|markdown }}
-        </div>
-      {% endif %}
-      <a href="#" class="card-link">More about {{ project.name }}</a>
-      {% if user.is_authenticated %}
-        {% cvgraph_prop_editor project %}
-        {% cvgraph_node_deleter project %}
+  {% if person.projects or user.is_authenticated %}
+    <div class="card">
+      <div class="card-block">
+        <h4 class="card-title">Projects</h4>
+        {% if user.is_authenticated %}
+          {% cvgraph_node_creator person "projects" "name" %}
+        {% endif %}
+      </div>
+      {% if person.projects %}
+        <ul class="list-group list-group-flush">
+          {% for project in person.projects %}
+            <li class="list-group-item">
+              <a href="{% url 'cvgraph:project_detail' id=project|node_id slug=project.name|slugify %}">{{ project.name }}</a>
+              {% if user.is_authenticated %}
+                {% cvgraph_prop_editor project "name" %}
+                {% cvgraph_node_deleter project %}
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
       {% endif %}
     </div>
-  {% endfor %}
+  {% endif %}
 
   {% if person.notes %}
     <h2>Notes</h2>
