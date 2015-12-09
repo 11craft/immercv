@@ -8,6 +8,30 @@
     {% cvgraph_prop_editor person "name" %}
   {% endif %}
 
+  {% if person.projects %}
+    <h2>Projects</h2>
+  {% endif %}
+  {% if user.is_authenticated %}
+    {% cvgraph_node_creator person "projects" %}
+  {% endif %}
+  {% for project in person.projects %}
+    <div class="card">
+      <div class="card-block">
+        <h3>{{ project.name }}</h3>
+      </div>
+      <div class="card-block">
+        <a href="#">More about {{ project.name }}</a>
+      </div>
+      {% if user.is_authenticated %}
+        <div class="card-block">
+          {% cvgraph_prop_editor project %}
+          {% cvgraph_node_deleter project %}
+        </div>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+
   {% if person.notes %}
     <h2>Notes</h2>
   {% endif %}

@@ -1,10 +1,11 @@
-from neomodel import IntegerProperty, StructuredNode, StringProperty, db, DateProperty, RelationshipFrom
-
+from neomodel import IntegerProperty, StructuredNode, StringProperty, db, DateProperty, RelationshipFrom, \
+    RelationshipTo
 
 EDITABLE_PROPERTIES = {
     # labels: {property-name, ...},
     ':Note': {'text', 'date'},
     ':Person': {'name'},
+    ':Project': {'name'},
 }
 
 
@@ -43,6 +44,7 @@ class Person(StructuredNode):
     name = StringProperty(required=True)
 
     notes = RelationshipFrom('Note', 'ABOUT')
+    projects = RelationshipTo('Project', 'CONTRIBUTED_TO')
 
     @classmethod
     def for_user(cls, user):
@@ -57,3 +59,8 @@ class Person(StructuredNode):
             django_id=user.id,
             name=user.name if len(user.name) > 0 else user.username,
         ).save()
+
+
+class Project(StructuredNode):
+
+    name = StringProperty(required=True)

@@ -1,6 +1,6 @@
 from immercv.cvgraph.forms import form_for_node_properties
-from immercv.cvgraph.models import editable_params, get_by_id, Person, Note
-
+from immercv.cvgraph.models import editable_params, get_by_id, Person, Note, \
+    Project
 
 COMMAND_FUNCTIONS = {
     # Created via application of `command` decorator.
@@ -68,9 +68,35 @@ def create_person_note(request, params, node_id):
         person.notes.connect(note)
 
 
+@command(':Person', 'create', 'projects')
+def create_person_project(request, params, node_id):
+    person = get_by_id(Person, node_id)
+    params = editable_params(params, ':Project')
+    form = form_for_node_properties(Project, params.keys(), params)
+    if form.is_valid():
+        project = create_node_from_params(Project, params)
+        person.projects.connect(project)
+
+
 @command(':Person', 'update')
 def update_person(request, params, node_id):
     params = editable_params(params, ':Person')
     person = get_by_id(Person, node_id)
     set_node_properties_from_params(person, params)
     person.save()
+
+
+@command(':Project', 'delete')
+def delete_project(request, params, node_id):
+    project = get_by_id(Project, node_id)
+    project.delete()
+
+
+@command(':Project', 'update')
+def update_project(request, params, node_id):
+    project = get_by_id(Project, node_id)
+    params = editable_params(params, ':Project')
+    form = form_for_node_properties(project, params.keys(), params)
+    if form.is_valid():
+        set_node_properties_from_params(project, form.cleaned_data)
+        project.save()
