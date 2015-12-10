@@ -2,7 +2,9 @@
 
 {% block navbar_items %}
   {{ block.super }}
-  <li class="nav-item">
-    <button id="preview-toggle" class="btn btn-primary-outline">Preview</button>
-  </li>
+  {% if user.is_authenticated %}
+    <li class="nav-item">
+      <button id="preview-toggle" class="btn btn-primary-outline">Preview</button>
+    </li>
+  {% endif %}
 {% endblock %}
