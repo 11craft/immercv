@@ -5,7 +5,7 @@
 
   <h1>{{ role.name }}</h1>
   {% if user.is_authenticated %}
-    {% cvgraph_node_editor role %}
+    {% cvgraph_node_edit_properties role %}
   {% endif %}
 
   {% for person in role.people %}
@@ -18,7 +18,7 @@
         until {{ performed.end_date }}{% endif %}.
       </p>
       {% if user.is_authenticated %}
-        {% cvgraph_rel_editor performed %}
+        {% cvgraph_rel_edit_properties performed %}
       {% endif %}
     {% endwith %}
   {% endfor %}

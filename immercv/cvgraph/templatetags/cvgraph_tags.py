@@ -16,8 +16,8 @@ def relationship(relationship_manager, other):
     return relationship_manager.relationship(other)
 
 
-@register.inclusion_tag('cvgraph/tags/cvgraph_node_creator.html')
-def cvgraph_node_creator(node, relationship_name, *property_names):
+@register.inclusion_tag('cvgraph/tags/cvgraph_node_create_related.html')
+def cvgraph_node_create_related(node, relationship_name, *property_names):
     labels = label_string(node.labels())
     rel = getattr(node, relationship_name)
     other_node_class = rel.definition['node_class']
@@ -33,8 +33,8 @@ def cvgraph_node_creator(node, relationship_name, *property_names):
     }
 
 
-@register.inclusion_tag('cvgraph/tags/cvgraph_node_deleter.html')
-def cvgraph_node_deleter(node):
+@register.inclusion_tag('cvgraph/tags/cvgraph_node_delete.html')
+def cvgraph_node_delete(node):
     labels = label_string(node.labels())
     return {
         'labels': labels,
@@ -42,8 +42,8 @@ def cvgraph_node_deleter(node):
     }
 
 
-@register.inclusion_tag('cvgraph/tags/cvgraph_node_editor.html')
-def cvgraph_node_editor(node, *property_names):
+@register.inclusion_tag('cvgraph/tags/cvgraph_node_edit_properties.html')
+def cvgraph_node_edit_properties(node, *property_names):
     labels = label_string(node.labels())
     if len(property_names) == 0:
         property_names = EDITABLE_PROPERTIES[labels]
@@ -55,8 +55,8 @@ def cvgraph_node_editor(node, *property_names):
     }
 
 
-@register.inclusion_tag('cvgraph/tags/cvgraph_rel_editor.html')
-def cvgraph_rel_editor(rel, *property_names):
+@register.inclusion_tag('cvgraph/tags/cvgraph_rel_edit_properties.html')
+def cvgraph_rel_edit_properties(rel, *property_names):
     labels = '({})-[{}]->({})'.format(
         label_string(rel.start_node().labels()),
         label_string(rel.labels()),

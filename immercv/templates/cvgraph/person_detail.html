@@ -5,7 +5,7 @@
 
   <h1>{{ person.name }}</h1>
   {% if user.is_authenticated %}
-    {% cvgraph_node_editor person "name" %}
+    {% cvgraph_node_edit_properties person "name" %}
   {% endif %}
 
   <hr>
@@ -15,7 +15,7 @@
       <div class="card-block">
         <h4 class="card-title">Projects</h4>
         {% if user.is_authenticated %}
-          {% cvgraph_node_creator person "projects" "name" %}
+          {% cvgraph_node_create_related person "projects" "name" %}
         {% endif %}
       </div>
       {% if person.projects %}
@@ -24,8 +24,8 @@
             <li class="list-group-item">
               {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=project text=project.name %}
               {% if user.is_authenticated %}
-                {% cvgraph_node_editor project "name" %}
-                {% cvgraph_node_deleter project %}
+                {% cvgraph_node_edit_properties project "name" %}
+                {% cvgraph_node_delete project %}
               {% endif %}
             </li>
           {% endfor %}
@@ -41,7 +41,7 @@
       <div class="card-block">
         <h4 class="card-title">Roles</h4>
         {% if user.is_authenticated %}
-          {% cvgraph_node_creator person "roles" "name" %}
+          {% cvgraph_node_create_related person "roles" "name" %}
         {% endif %}
       </div>
       {% if person.roles %}
@@ -50,8 +50,8 @@
             <li class="list-group-item">
               {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=role.name %}
               {% if user.is_authenticated %}
-                {% cvgraph_node_editor role %}
-                {% cvgraph_node_deleter role %}
+                {% cvgraph_node_edit_properties role %}
+                {% cvgraph_node_delete role %}
               {% endif %}
             </li>
           {% endfor %}
@@ -66,7 +66,7 @@
     <h2>Notes</h2>
   {% endif %}
   {% if user.is_authenticated %}
-    {% cvgraph_node_creator person "notes"%}
+    {% cvgraph_node_create_related person "notes"%}
   {% endif %}
   {% for note in person.notes %}
     <div class="card card-block">
@@ -77,8 +77,8 @@
         <p class="card-text text-muted">{{ note.date }}</p>
       {% endif %}
       {% if user.is_authenticated %}
-        {% cvgraph_node_editor note %}
-        {% cvgraph_node_deleter note %}
+        {% cvgraph_node_edit_properties note %}
+        {% cvgraph_node_delete note %}
       {% endif %}
     </div>
   {% endfor %}
