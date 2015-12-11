@@ -5,7 +5,7 @@
 
   <h1>{{ project.name }}</h1>
   {% if user.is_authenticated %}
-    {% cvgraph_prop_editor project %}
+    {% cvgraph_node_editor project %}
   {% endif %}
 
   {% if project.description %}

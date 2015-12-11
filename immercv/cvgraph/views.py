@@ -4,7 +4,7 @@ from django.utils.text import slugify
 from django.views.generic import RedirectView, TemplateView
 
 from immercv.cvgraph.commands import apply_command
-from immercv.cvgraph.models import get_by_id, Person, Project
+from immercv.cvgraph.models import get_node_by_id, Person, Project, Role
 
 
 class CvgraphMeView(RedirectView):
@@ -22,26 +22,37 @@ class CvgraphMeView(RedirectView):
         ))
 
 
-class CvgraphPersonDetailView(TemplateView):
+class CvgraphModelDetailView(TemplateView):
 
-    template_name = 'cvgraph/person_detail.html'
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        person = get_by_id(Person, int(self.kwargs['id']))
-        data.update(person=person)
-        return data
-
-
-class CvgraphProjectDetailView(TemplateView):
-
-    template_name = 'cvgraph/project_detail.html'
+    model = None
+    context_name = None
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        project = get_by_id(Project, int(self.kwargs['id']))
-        data.update(project=project)
+        node = get_node_by_id(self.model, int(self.kwargs['id']))
+        data[self.context_name] = node
         return data
+
+    def get_template_names(self):
+        return ['cvgraph/{}_detail.html'.format(self.context_name)]
+
+
+class CvgraphPersonDetailView(CvgraphModelDetailView):
+
+    model = Person
+    context_name = 'person'
+
+
+class CvgraphProjectDetailView(CvgraphModelDetailView):
+
+    model = Project
+    context_name = 'project'
+
+
+class CvgraphRoleDetailView(CvgraphModelDetailView):
+
+    model = Role
+    context_name = 'role'
 
 
 class CvgraphChangeView(RedirectView):
@@ -53,5 +64,6 @@ class CvgraphChangeView(RedirectView):
             raise Http404()
         else:
             params = self.request.POST.copy()
+            del params['csrfmiddlewaretoken']
             apply_command(self.request, params)
             return self.request.META['HTTP_REFERER']

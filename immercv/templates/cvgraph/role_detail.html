@@ -1,0 +1,26 @@
+{% extends "cvgraph/base.html" %}
+{% load cvgraph_tags markdown_deux_tags %}
+
+{% block content %}
+
+  <h1>{{ role.name }}</h1>
+  {% if user.is_authenticated %}
+    {% cvgraph_node_editor role %}
+  {% endif %}
+
+  {% for person in role.people %}
+    {% with performed=role.people|relationship:person %}
+      <p>
+        {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:person_detail' node=person text=person.name %}
+        performed this role{% if performed.start_date and performed.end_date %}
+        between {{ performed.start_date }} and {{ performed.end_date }}{% elif performed.start_date %}
+        starting {{ performed.start_date }}{% elif performed.end_date %}
+        until {{ performed.end_date }}{% endif %}.
+      </p>
+      {% if user.is_authenticated %}
+        {% cvgraph_rel_editor performed %}
+      {% endif %}
+    {% endwith %}
+  {% endfor %}
+
+{% endblock %}

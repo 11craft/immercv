@@ -1,19 +1,25 @@
 from neomodel import IntegerProperty, StructuredNode, StringProperty, db, DateProperty, RelationshipFrom, \
-    RelationshipTo
+    RelationshipTo, StructuredRel
 
 EDITABLE_PROPERTIES = {
     # labels: {property-name, ...},
-    ':Note': {'text', 'date'},
-    ':Person': {'name'},
-    ':Project': {'name', 'description'},
+
+    # Nodes
+    ':Note': ['text', 'date'],
+    ':Person': ['name'],
+    ':Project': ['name', 'description'],
+    ':Role': ['name'],
+
+    # Relationships
+    '(:Person)-[:PERFORMED]->(:Role)': ['start_date', 'end_date'],
 }
 
 
-def get_by_id(cls, id):
+def get_node_by_id(cls, id):
     labels = ''.join(label_string(cls.inherited_labels()))
     results = db.cypher_query(
         'MATCH (n{}) WHERE ID(n)={{id}} RETURN n'.format(labels),
-        dict(id=int(id))
+        dict(id=id)
     )
     if len(results) == 0:
         raise cls.DoesNotExist('No node found with given ID')
@@ -37,6 +43,18 @@ class Note(StructuredNode):
     text = StringProperty(required=True)
     date = DateProperty()
 
+    def __str__(self):
+        return u'Note'
+
+
+class PerformedRel(StructuredRel):
+
+    start_date = DateProperty()
+    end_date = DateProperty()
+
+    def labels(self):
+        return ['PERFORMED']
+
 
 class Person(StructuredNode):
 
@@ -45,6 +63,10 @@ class Person(StructuredNode):
 
     notes = RelationshipFrom('Note', 'ABOUT')
     projects = RelationshipTo('Project', 'CONTRIBUTED_TO')
+    roles = RelationshipTo('Role', 'PERFORMED', model=PerformedRel)
+
+    def __str__(self):
+        return self.name
 
     @classmethod
     def for_user(cls, user):
@@ -65,3 +87,16 @@ class Project(StructuredNode):
 
     name = StringProperty(required=True)
     description = StringProperty()
+
+    def __str__(self):
+        return self.name
+
+
+class Role(StructuredNode):
+
+    name = StringProperty(required=True)
+
+    people = RelationshipFrom('Person', 'PERFORMED', model=PerformedRel)
+
+    def __str__(self):
+        return self.name

@@ -5,8 +5,10 @@
 
   <h1>{{ person.name }}</h1>
   {% if user.is_authenticated %}
-    {% cvgraph_prop_editor person "name" %}
+    {% cvgraph_node_editor person "name" %}
   {% endif %}
+
+  <hr>
 
   {% if person.projects or user.is_authenticated %}
     <div class="card">
@@ -20,9 +22,9 @@
         <ul class="list-group list-group-flush">
           {% for project in person.projects %}
             <li class="list-group-item">
-              <a href="{% url 'cvgraph:project_detail' id=project|node_id slug=project.name|slugify %}">{{ project.name }}</a>
+              {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=project text=project.name %}
               {% if user.is_authenticated %}
-                {% cvgraph_prop_editor project "name" %}
+                {% cvgraph_node_editor project "name" %}
                 {% cvgraph_node_deleter project %}
               {% endif %}
             </li>
@@ -31,6 +33,34 @@
       {% endif %}
     </div>
   {% endif %}
+
+  <hr>
+
+  {% if person.roles or user.is_authenticated %}
+    <div class="card">
+      <div class="card-block">
+        <h4 class="card-title">Roles</h4>
+        {% if user.is_authenticated %}
+          {% cvgraph_node_creator person "roles" "name" %}
+        {% endif %}
+      </div>
+      {% if person.roles %}
+        <ul class="list-group list-group-flush">
+          {% for role in person.roles %}
+            <li class="list-group-item">
+              {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=role.name %}
+              {% if user.is_authenticated %}
+                {% cvgraph_node_editor role %}
+                {% cvgraph_node_deleter role %}
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <hr>
 
   {% if person.notes %}
     <h2>Notes</h2>
@@ -47,7 +77,7 @@
         <p class="card-text text-muted">{{ note.date }}</p>
       {% endif %}
       {% if user.is_authenticated %}
-        {% cvgraph_prop_editor note %}
+        {% cvgraph_node_editor note %}
         {% cvgraph_node_deleter note %}
       {% endif %}
     </div>
