@@ -4,7 +4,8 @@ from django.utils.text import slugify
 from django.views.generic import RedirectView, TemplateView
 
 from immercv.cvgraph.commands import apply_command
-from immercv.cvgraph.models import get_node_by_id, Person, Project, Role
+from immercv.cvgraph.models import get_node_by_id, Person, Project, Role, \
+    Company
 
 
 class CvgraphMeView(RedirectView):
@@ -35,6 +36,12 @@ class CvgraphModelDetailView(TemplateView):
 
     def get_template_names(self):
         return ['cvgraph/{}_detail.html'.format(self.context_name)]
+
+
+class CvgraphCompanyDetailView(CvgraphModelDetailView):
+
+    model = Company
+    context_name = 'company'
 
 
 class CvgraphPersonDetailView(CvgraphModelDetailView):

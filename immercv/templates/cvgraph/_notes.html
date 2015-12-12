@@ -1,0 +1,22 @@
+{% load cvgraph_tags markdown_deux_tags %}
+
+{% if node.notes %}
+  <h2>Notes</h2>
+{% endif %}
+{% if user.is_authenticated %}
+  {% cvgraph_node_create_related node "notes" %}
+{% endif %}
+{% for note in node.notes %}
+  <div class="card card-block">
+    <div class="card-text">
+      {{ note.text|markdown }}
+    </div>
+    {% if note.date %}
+      <p class="card-text text-muted">{{ note.date }}</p>
+    {% endif %}
+    {% if user.is_authenticated %}
+      {% cvgraph_node_edit_properties note %}
+      {% cvgraph_node_delete note %}
+    {% endif %}
+  </div>
+{% endfor %}

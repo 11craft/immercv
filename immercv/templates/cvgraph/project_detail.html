@@ -12,4 +12,6 @@
     {{ project.description|markdown }}
   {% endif %}
 
+  {% include 'cvgraph/_notes.html' with node=project %}
+
 {% endblock %}

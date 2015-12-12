@@ -5,6 +5,7 @@ EDITABLE_PROPERTIES = {
     # labels: {property-name, ...},
 
     # Nodes
+    ':Company': ['name'],
     ':Note': ['text', 'date'],
     ':Person': ['name'],
     ':Project': ['name', 'description'],
@@ -36,6 +37,16 @@ def editable_params(params, label):
         for k, v in params.items()
         if k in EDITABLE_PROPERTIES[label]
         }
+
+
+class Company(StructuredNode):
+
+    name = StringProperty(required=True)
+
+    notes = RelationshipFrom('Note', 'ABOUT')
+
+    def __str__(self):
+        return self.name
 
 
 class Note(StructuredNode):
@@ -88,6 +99,8 @@ class Project(StructuredNode):
     name = StringProperty(required=True)
     description = StringProperty()
 
+    notes = RelationshipFrom('Note', 'ABOUT')
+
     def __str__(self):
         return self.name
 
@@ -96,6 +109,8 @@ class Role(StructuredNode):
 
     name = StringProperty(required=True)
 
+    companies = RelationshipTo('Company', 'WITH')
+    notes = RelationshipFrom('Note', 'ABOUT')
     people = RelationshipFrom('Person', 'PERFORMED', model=PerformedRel)
 
     def __str__(self):

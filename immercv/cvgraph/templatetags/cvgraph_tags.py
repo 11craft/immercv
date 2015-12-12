@@ -1,6 +1,7 @@
 from django import template
 
-from immercv.cvgraph.forms import form_for_node_properties
+from immercv.cvgraph.forms import form_for_node_properties, \
+    form_for_node_link
 from immercv.cvgraph.models import label_string, EDITABLE_PROPERTIES
 
 register = template.Library()
@@ -33,12 +34,39 @@ def cvgraph_node_create_related(node, relationship_name, *property_names):
     }
 
 
+@register.inclusion_tag('cvgraph/tags/cvgraph_node_link_related.html')
+def cvgraph_node_link_related(node, relationship_name, *property_names):
+    labels = label_string(node.labels())
+    rel = getattr(node, relationship_name)
+    other_node_class = rel.definition['node_class']
+    form = form_for_node_link(other_node_class)
+    return {
+        'form': form,
+        'labels': labels,
+        'node_id': node._id,
+        'relationship_name': relationship_name,
+    }
+
+
 @register.inclusion_tag('cvgraph/tags/cvgraph_node_delete.html')
 def cvgraph_node_delete(node):
     labels = label_string(node.labels())
     return {
         'labels': labels,
         'node_id': node._id,
+    }
+
+
+@register.inclusion_tag('cvgraph/tags/cvgraph_node_unlink.html')
+def cvgraph_node_unlink(node, relationship_name, other_node):
+    labels = label_string(node.labels())
+    other_labels = label_string(other_node.labels())
+    return {
+        'labels': labels,
+        'node_id': node._id,
+        'relationship_name': relationship_name,
+        'other_node_id': other_node._id,
+        'other_labels': other_labels,
     }
 
 

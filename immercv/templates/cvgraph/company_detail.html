@@ -1,0 +1,13 @@
+{% extends "cvgraph/base.html" %}
+{% load cvgraph_tags %}
+
+{% block content %}
+
+  <h1>{{ company.name }}</h1>
+  {% if user.is_authenticated %}
+    {% cvgraph_node_edit_properties company %}
+  {% endif %}
+
+  {% include 'cvgraph/_notes.html' with node=company %}
+
+{% endblock %}

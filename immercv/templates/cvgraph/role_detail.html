@@ -1,11 +1,24 @@
 {% extends "cvgraph/base.html" %}
-{% load cvgraph_tags markdown_deux_tags %}
+{% load cvgraph_tags %}
 
 {% block content %}
 
   <h1>{{ role.name }}</h1>
   {% if user.is_authenticated %}
     {% cvgraph_node_edit_properties role %}
+  {% endif %}
+
+  {% if role.companies %}
+    {% with company=role.companies.0.0 %}
+      <h2>{% include 'cvgraph/_node_detail_link.html' with url='cvgraph:company_detail' node=company text=company.name %}</h2>
+      {% cvgraph_node_delete company %}
+      {% cvgraph_node_unlink role "companies" company %}
+    {% endwith %}
+  {% else %}
+    {% if user.is_authenticated %}
+      {% cvgraph_node_create_related role "companies" "name" %}
+      {% cvgraph_node_link_related role "companies" %}
+    {% endif %}
   {% endif %}
 
   {% for person in role.people %}
@@ -22,5 +35,7 @@
       {% endif %}
     {% endwith %}
   {% endfor %}
+
+  {% include 'cvgraph/_notes.html' with node=role %}
 
 {% endblock %}
