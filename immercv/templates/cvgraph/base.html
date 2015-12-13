@@ -4,7 +4,13 @@
   {{ block.super }}
   {% if user.is_authenticated %}
     <li class="nav-item">
-      <button id="preview-toggle" class="btn btn-primary-outline">Preview</button>
+      <div class="nav-link">
+        <label class="c-input c-checkbox" style="color: rgba(255, 255, 255, .5)">
+          <input id="preview-toggle" type="checkbox"/>
+          <span class="c-indicator"></span>
+          Preview
+        </label>
+      </div>
     </li>
   {% endif %}
 {% endblock %}
