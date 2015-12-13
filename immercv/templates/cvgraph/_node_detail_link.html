@@ -1,2 +1,8 @@
 {% load cvgraph_tags %}
-<a href="{% url url id=node|node_id slug=text|slugify %}">{{ text }}</a>
+{% spaceless %}
+  {% if slugtext %}
+    <a href="{% url url id=node|node_id slug=slugtext|slugify %}">{{ text }}</a>
+  {% else %}
+    <a href="{% url url id=node|node_id slug=text|slugify %}">{{ text }}</a>
+  {% endif %}
+{% endspaceless %}

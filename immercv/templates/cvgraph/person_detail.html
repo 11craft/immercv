@@ -24,6 +24,14 @@
               {% for role in person.roles %}
                 <li class="list-group-item">
                   {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=role.name %}
+                  {% if role.companies %}
+                    {% with company=role.companies.single.0 %}
+                      <br>
+                      <small>
+                        {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=company.name slugtext=role.name %}
+                      </small>
+                    {% endwith %}
+                  {% endif %}
                   {% if user.is_authenticated %}
                     {% cvgraph_node_edit_properties role %}
                     {% cvgraph_node_delete role %}
