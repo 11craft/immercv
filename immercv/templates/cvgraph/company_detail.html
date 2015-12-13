@@ -8,6 +8,38 @@
     {% cvgraph_node_edit_properties company %}
   {% endif %}
 
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Role</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for role in company.roles %}
+        {% for person in role.people %}
+          {% with performed=role.people|relationship:person %}
+            <tr>
+              <td>
+                {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=role.name %}
+                {% if user.is_authenticated %}
+                  {% cvgraph_rel_edit_properties performed %}
+                {% endif %}
+              </td>
+              <td>
+                {{ performed.start_date }}
+              </td>
+              <td>
+                {{ performed.end_date }}
+              </td>
+            </tr>
+          {% endwith %}
+        {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+
   {% include 'cvgraph/_notes.html' with node=company %}
 
 {% endblock %}

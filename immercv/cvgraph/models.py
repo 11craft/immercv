@@ -44,6 +44,7 @@ class Company(StructuredNode):
     name = StringProperty(required=True)
 
     notes = RelationshipFrom('Note', 'ABOUT')
+    roles = RelationshipFrom('Role', 'WITH')
 
     def __str__(self):
         return self.name
