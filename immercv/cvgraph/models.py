@@ -13,6 +13,7 @@ EDITABLE_PROPERTIES = {
 
     # Relationships
     '(:Person)-[:PERFORMED]->(:Role)': ['start_date', 'end_date'],
+    '(:Person)-[:CONTRIBUTED_TO]->(:Project)': ['start_date', 'end_date'],
 }
 
 
@@ -39,6 +40,24 @@ def editable_params(params, label):
         }
 
 
+class DateRangeRel(StructuredRel):
+
+    start_date = DateProperty()
+    end_date = DateProperty()
+
+
+class PerformedRel(DateRangeRel):
+
+    def labels(self):
+        return ['PERFORMED']
+
+
+class ContributedToRel(DateRangeRel):
+
+    def labels(self):
+        return ['CONTRIBUTED_TO']
+
+
 class Company(StructuredNode):
 
     name = StringProperty(required=True)
@@ -59,22 +78,13 @@ class Note(StructuredNode):
         return u'Note'
 
 
-class PerformedRel(StructuredRel):
-
-    start_date = DateProperty()
-    end_date = DateProperty()
-
-    def labels(self):
-        return ['PERFORMED']
-
-
 class Person(StructuredNode):
 
     django_id = IntegerProperty(unique_index=True, required=True)
     name = StringProperty(required=True)
 
     notes = RelationshipFrom('Note', 'ABOUT')
-    projects = RelationshipTo('Project', 'CONTRIBUTED_TO')
+    projects = RelationshipTo('Project', 'CONTRIBUTED_TO', model=ContributedToRel)
     roles = RelationshipTo('Role', 'PERFORMED', model=PerformedRel)
 
     def __str__(self):
@@ -101,6 +111,7 @@ class Project(StructuredNode):
     description = StringProperty()
 
     notes = RelationshipFrom('Note', 'ABOUT')
+    people = RelationshipFrom('Person', 'CONTRIBUTED_TO', model=ContributedToRel)
 
     def __str__(self):
         return self.name
