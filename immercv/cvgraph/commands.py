@@ -171,7 +171,6 @@ def link_role_company(request, params, node_id):
 def unlink_role_company(request, params, node_id):
     role = get_node_by_id(Role, node_id)
     company = get_node_by_id(Company, int(params['_other_node_id']))
-    print('**************')
     role.companies.disconnect(company)
 
 
