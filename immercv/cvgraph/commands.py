@@ -180,6 +180,35 @@ def delete_role(request, params, node_id):
     role.delete()
 
 
+@command(':Role', 'create', 'via_roles')
+def create_role_via_role(request, params, node_id):
+    role = get_node_by_id(Role, node_id)
+    params = editable_params(params, ':Role')
+    form = form_for_node_properties(Role, params.keys(), params)
+    if form.is_valid():
+        via_role = create_node_from_params(Role, form.cleaned_data)
+        role.via_roles.connect(via_role)
+        for person in role.people:
+            via_role.people.connect(person)
+
+
+@command(':Role', 'link', 'via_roles')
+def link_role_via_role(request, params, node_id):
+    role = get_node_by_id(Role, node_id)
+    form = form_for_node_link(Company, params)
+    if form.is_valid():
+        other_node_id = int(form.cleaned_data['link_to'])
+        via_role = get_node_by_id(Role, other_node_id)
+        role.via_roles.connect(via_role)
+
+
+@command(':Role', 'unlink', 'via_roles')
+def unlink_role_via_role(request, params, node_id):
+    role = get_node_by_id(Role, node_id)
+    via_role = get_node_by_id(Role, int(params['_other_node_id']))
+    role.companies.disconnect(via_role)
+
+
 @command(':Role', 'update')
 def update_role(request, params, node_id):
     role = get_node_by_id(Role, node_id)

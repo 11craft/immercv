@@ -22,7 +22,7 @@ def get_node_by_id(cls, id):
         'MATCH (n{}) WHERE ID(n)={{id}} RETURN n'.format(labels),
         dict(id=id)
     )
-    if len(results) == 0:
+    if len(results[0]) == 0:
         raise cls.DoesNotExist('No node found with given ID')
     return cls.inflate(results[0][0]['n'])
 
@@ -112,6 +112,11 @@ class Role(StructuredNode):
     companies = RelationshipTo('Company', 'WITH')
     notes = RelationshipFrom('Note', 'ABOUT')
     people = RelationshipFrom('Person', 'PERFORMED', model=PerformedRel)
+    via_roles = RelationshipTo('Role', 'VIA')
 
     def __str__(self):
-        return self.name
+        if len(self.companies) == 0:
+            return self.name
+        else:
+            company = self.companies.single()
+            return '{} at {}'.format(self.name, company.name)
