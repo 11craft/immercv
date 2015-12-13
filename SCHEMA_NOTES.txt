@@ -1,0 +1,53 @@
+(:Book {name})
+(:Book) -[:ABOUT]-> (:Topic)
+
+(:Certification {name})
+(:Certification) -[:FOR]-> (:Topic)
+
+(:Company {name, description})
+(:Company) -[:USES]-> (:Topic)
+
+(:ContactInfo {type, value})
+(:ContactInfo) -[:FOR]-> (:Person)
+
+(:Course {name})
+(:Course) -[:ABOUT]-> (:Topic)
+
+(:Experience {title, text})
+(:Experience) -[:ABOUT]-> (*)
+
+(:Link {title, url})
+(:Link) -[:ABOUT]-> (*)
+
+(:Note {text[, date]})
+(:Note) -[:ABOUT]-> (*)
+
+(:Person {name})
+(:Person) -[:ATTENDED {startDate(, endDate)]-> (:Course | :School)
+(:Person) -[:CONTRIBUTED_TO {startDate(, endDate)}]-> (:Project)
+(:Person) -[:GRADUATED_FROM {date(, degree)}-> (:School)
+(:Person) -[:HAD {(date)}]-> (:Experience)
+(:Person) -[:PERFORMED {startDate(, endDate)}]-> (:Role)
+(:Person) -[:READ]-> (:Book)
+(:Person) -[:RECEIVED {date})-> (:Certification)
+
+(:Project {name, description})
+
+(:Role {name})
+(:Role) -[:VIA]-> (:Role)
+(:Role) -[:WITH]-> (:Company)
+(:Role) -[:USES]-> (:Topic)
+(:Role) -[:WORKED_ON]-> (:Project)
+
+(:School {name(, location)})
+
+(:Testimonial {text})
+(:Testimonial) -[:BY]-> (:ThirdPerson)
+(:Testimonial) -[:REFERS_TO]-> (:Company | :Project | :Role)
+(:Testimonial) -[:FOR]-> (:Person)
+
+(:ThirdPerson {name})
+(:ThirdPerson) -[:WORKED_FOR {title}]-> (:Company)
+
+(:Topic {name})
+(:Topic) -[:RELATES_TO]-> (*)
