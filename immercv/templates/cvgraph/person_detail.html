@@ -8,53 +8,61 @@
     {% cvgraph_node_edit_properties person "name" %}
   {% endif %}
 
-  {% if person.projects or user.is_authenticated %}
-    <div class="card">
-      <div class="card-block">
-        <h4 class="card-title">Projects</h4>
-        {% if user.is_authenticated %}
-          {% cvgraph_node_create_related person "projects" "name" %}
-        {% endif %}
-      </div>
-      {% if person.projects %}
-        <ul class="list-group list-group-flush">
-          {% for project in person.projects %}
-            <li class="list-group-item">
-              {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=project text=project.name %}
-              {% if user.is_authenticated %}
-                {% cvgraph_node_edit_properties project "name" %}
-                {% cvgraph_node_delete project %}
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </div>
-  {% endif %}
+  <div class="row">
 
-  {% if person.roles or user.is_authenticated %}
-    <div class="card">
-      <div class="card-block">
-        <h4 class="card-title">Roles</h4>
-        {% if user.is_authenticated %}
-          {% cvgraph_node_create_related person "roles" "name" %}
-        {% endif %}
-      </div>
-      {% if person.roles %}
-        <ul class="list-group list-group-flush">
-          {% for role in person.roles %}
-            <li class="list-group-item">
-              {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=role.name %}
-              {% if user.is_authenticated %}
-                {% cvgraph_node_edit_properties role %}
-                {% cvgraph_node_delete role %}
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
+    <div class="col-md-6">
+      {% if person.roles or user.is_authenticated %}
+        <div class="card">
+          <div class="card-block">
+            <h4 class="card-title">Roles</h4>
+            {% if user.is_authenticated %}
+              {% cvgraph_node_create_related person "roles" "name" %}
+            {% endif %}
+          </div>
+          {% if person.roles %}
+            <ul class="list-group list-group-flush">
+              {% for role in person.roles %}
+                <li class="list-group-item">
+                  {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=role.name %}
+                  {% if user.is_authenticated %}
+                    {% cvgraph_node_edit_properties role %}
+                    {% cvgraph_node_delete role %}
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
       {% endif %}
     </div>
-  {% endif %}
+
+    <div class="col-md-6">
+      {% if person.projects or user.is_authenticated %}
+        <div class="card">
+          <div class="card-block">
+            <h4 class="card-title">Projects</h4>
+            {% if user.is_authenticated %}
+              {% cvgraph_node_create_related person "projects" "name" %}
+            {% endif %}
+          </div>
+          {% if person.projects %}
+            <ul class="list-group list-group-flush">
+              {% for project in person.projects %}
+                <li class="list-group-item">
+                  {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=project text=project.name %}
+                  {% if user.is_authenticated %}
+                    {% cvgraph_node_edit_properties project "name" %}
+                    {% cvgraph_node_delete project %}
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
 
   {% include 'cvgraph/_notes.html' with node=person %}
 
