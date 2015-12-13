@@ -8,8 +8,6 @@
     {% cvgraph_node_edit_properties person "name" %}
   {% endif %}
 
-  <hr>
-
   {% if person.projects or user.is_authenticated %}
     <div class="card">
       <div class="card-block">
@@ -33,8 +31,6 @@
       {% endif %}
     </div>
   {% endif %}
-
-  <hr>
 
   {% if person.roles or user.is_authenticated %}
     <div class="card">
