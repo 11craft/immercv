@@ -5,7 +5,6 @@
 (:Certification) -[:FOR]-> (:Topic)
 
 (:Company {name, description})
-(:Company) -[:USES]-> (:Topic)
 
 (:ContactInfo {type, value})
 (:ContactInfo) -[:FOR]-> (:Person)
