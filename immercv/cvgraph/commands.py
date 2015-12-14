@@ -3,7 +3,7 @@ from neomodel import db
 from immercv.cvgraph.forms import form_for_node_properties, \
     form_for_node_link
 from immercv.cvgraph.models import editable_params, get_node_by_id, Person, Note, \
-    Project, Role, PerformedRel, Company
+    Project, Role, PerformedRel, Company, Topic
 
 COMMAND_FUNCTIONS = {
     # Created via application of `command` decorator.
@@ -73,7 +73,7 @@ def update_company(request, params, node_id):
 
 
 @command(':Company', 'create', 'notes')
-def create_project_note(request, params, node_id):
+def create_company_note(request, params, node_id):
     create_note(Company, params, node_id)
 
 
@@ -147,6 +147,39 @@ def create_project_note(request, params, node_id):
     create_note(Project, params, node_id)
 
 
+@command(':Project', 'create', 'topics')
+def create_project_topic(request, params, node_id):
+    project = get_node_by_id(Project, node_id)
+    params = editable_params(params, ':Topic')
+    form = form_for_node_properties(Topic, params.keys(), params)
+    if form.is_valid():
+        topic = create_node_from_params(Topic, form.cleaned_data)
+        project.topics.connect(topic)
+
+
+@command(':Project', 'link', 'topics')
+def link_project_topic(request, params, node_id):
+    project = get_node_by_id(Project, node_id)
+    form = form_for_node_link(Topic, params)
+    if form.is_valid():
+        other_node_id = int(form.cleaned_data['link_to'])
+        topic = get_node_by_id(Topic, other_node_id)
+        project.topics.connect(topic)
+
+
+@command(':Project', 'unlink', 'topics')
+def unlink_project_topic(request, params, node_id):
+    project = get_node_by_id(Project, node_id)
+    topic = get_node_by_id(Topic, int(params['_other_node_id']))
+    project.topics.disconnect(topic)
+
+
+@command(':Project', 'delete')
+def delete_project(request, params, node_id):
+    project = get_node_by_id(Project, node_id)
+    project.delete()
+
+
 @command(':Role', 'create', 'companies')
 def create_role_company(request, params, node_id):
     role = get_node_by_id(Role, node_id)
@@ -195,7 +228,7 @@ def create_role_via_role(request, params, node_id):
 @command(':Role', 'link', 'via_roles')
 def link_role_via_role(request, params, node_id):
     role = get_node_by_id(Role, node_id)
-    form = form_for_node_link(Company, params)
+    form = form_for_node_link(Role, params)
     if form.is_valid():
         other_node_id = int(form.cleaned_data['link_to'])
         via_role = get_node_by_id(Role, other_node_id)
@@ -220,7 +253,7 @@ def update_role(request, params, node_id):
 
 
 @command(':Role', 'create', 'notes')
-def create_project_note(request, params, node_id):
+def create_role_note(request, params, node_id):
     create_note(Role, params, node_id)
 
 
@@ -235,3 +268,51 @@ def update_performed(request, params, node_id):
     if form.is_valid():
         set_node_properties_from_params(performed, form.cleaned_data)
         performed.save()
+
+
+@command(':Topic', 'delete')
+def delete_topic(request, params, node_id):
+    topic = get_node_by_id(Topic, node_id)
+    topic.delete()
+
+
+@command(':Topic', 'create', 'notes')
+def create_topic_note(request, params, node_id):
+    create_note(Topic, params, node_id)
+
+
+@command(':Topic', 'create', 'topics')
+def create_topic_other_topic(request, params, node_id):
+    topic = get_node_by_id(Topic, node_id)
+    params = editable_params(params, ':Topic')
+    form = form_for_node_properties(Topic, params.keys(), params)
+    if form.is_valid():
+        other_topic = create_node_from_params(Topic, form.cleaned_data)
+        topic.topics.connect(other_topic)
+
+
+@command(':Topic', 'link', 'topics')
+def link_topic_other_topic(request, params, node_id):
+    topic = get_node_by_id(Topic, node_id)
+    form = form_for_node_link(Topic, params)
+    if form.is_valid():
+        other_node_id = int(form.cleaned_data['link_to'])
+        other_topic = get_node_by_id(Topic, other_node_id)
+        topic.topics.connect(other_topic)
+
+
+@command(':Topic', 'unlink', 'topics')
+def unlink_topic_other_topic(request, params, node_id):
+    topic = get_node_by_id(Topic, node_id)
+    other_topic = get_node_by_id(Topic, int(params['_other_node_id']))
+    topic.companies.disconnect(other_topic)
+
+
+@command(':Topic', 'update')
+def update_topic(request, params, node_id):
+    topic = get_node_by_id(Topic, node_id)
+    params = editable_params(params, ':Topic')
+    form = form_for_node_properties(topic, params.keys(), params)
+    if form.is_valid():
+        set_node_properties_from_params(topic, form.cleaned_data)
+        topic.save()

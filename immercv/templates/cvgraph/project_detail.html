@@ -29,6 +29,8 @@
     {{ project.description|markdown }}
   {% endif %}
 
+  {% include 'cvgraph/_topics_deep.html' with node=project %}
+
   {% include 'cvgraph/_notes.html' with node=project %}
 
 {% endblock %}

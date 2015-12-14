@@ -10,6 +10,7 @@ EDITABLE_PROPERTIES = {
     ':Person': ['name'],
     ':Project': ['name', 'description'],
     ':Role': ['name'],
+    ':Topic': ['name', 'description'],
 
     # Relationships
     '(:Person)-[:PERFORMED]->(:Role)': ['start_date', 'end_date'],
@@ -64,6 +65,7 @@ class Company(StructuredNode):
 
     notes = RelationshipFrom('Note', 'ABOUT')
     roles = RelationshipFrom('Role', 'WITH')
+    topics = RelationshipFrom('Topic', 'RELATED_TO')
 
     def __str__(self):
         return self.name
@@ -86,6 +88,7 @@ class Person(StructuredNode):
     notes = RelationshipFrom('Note', 'ABOUT')
     projects = RelationshipTo('Project', 'CONTRIBUTED_TO', model=ContributedToRel)
     roles = RelationshipTo('Role', 'PERFORMED', model=PerformedRel)
+    topics = RelationshipFrom('Topic', 'RELATED_TO')
 
     def __str__(self):
         return self.name
@@ -112,6 +115,7 @@ class Project(StructuredNode):
 
     notes = RelationshipFrom('Note', 'ABOUT')
     people = RelationshipFrom('Person', 'CONTRIBUTED_TO', model=ContributedToRel)
+    topics = RelationshipFrom('Topic', 'RELATED_TO')
 
     def __str__(self):
         return self.name
@@ -124,6 +128,7 @@ class Role(StructuredNode):
     companies = RelationshipTo('Company', 'WITH')
     notes = RelationshipFrom('Note', 'ABOUT')
     people = RelationshipFrom('Person', 'PERFORMED', model=PerformedRel)
+    topics = RelationshipFrom('Topic', 'RELATED_TO')
     via_roles = RelationshipTo('Role', 'VIA')
 
     def __str__(self):
@@ -132,3 +137,15 @@ class Role(StructuredNode):
         else:
             company = self.companies.single()
             return '{} at {}'.format(self.name, company.name)
+
+
+class Topic(StructuredNode):
+
+    name = StringProperty(required=True)
+    description = StringProperty()
+
+    notes = RelationshipFrom('Note', 'ABOUT')
+    topics = RelationshipFrom('Topic', 'RELATED_TO')
+
+    def __str__(self):
+        return self.name

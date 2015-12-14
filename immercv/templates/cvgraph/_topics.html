@@ -1,0 +1,18 @@
+{% load cvgraph_tags %}
+
+{% if topics %}
+  <h2>Related Topics</h2>
+{% endif %}
+{% if user.is_authenticated %}
+  {% cvgraph_node_create_related node "topics" "name" %}
+  {% cvgraph_node_link_related node "topics" %}
+{% endif %}
+{% if topics %}
+  {% for topic in topics %}
+    <div style="display:inline-block">
+      {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:topic_detail' node=topic text=topic.name class="btn btn-link" %}
+      {% cvgraph_node_delete topic %}
+      {% cvgraph_node_unlink node "topics" topic %}
+    </div>
+  {% endfor %}
+{% endif %}

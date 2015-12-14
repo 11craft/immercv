@@ -1,10 +1,23 @@
 from django import template
+from neomodel import db
 
 from immercv.cvgraph.forms import form_for_node_properties, \
     form_for_node_link
-from immercv.cvgraph.models import label_string, EDITABLE_PROPERTIES
+from immercv.cvgraph.models import label_string, EDITABLE_PROPERTIES, Topic
 
 register = template.Library()
+
+
+@register.filter
+def cvgraph_deep_topics(node):
+    query = """
+        START n=node({self})
+        MATCH n-[*0..]->()<-[:RELATED_TO*1..]-(topics:Topic)
+        RETURN topics
+    """
+    params = {'self': node._id}
+    results, meta = db.cypher_query(query, params)
+    return [Topic.inflate(row[0]) for row in results]
 
 
 @register.filter

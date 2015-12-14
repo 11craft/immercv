@@ -1,0 +1,19 @@
+{% extends "cvgraph/base.html" %}
+{% load cvgraph_tags markdown_deux_tags %}
+
+{% block content %}
+
+  <h1>{{ topic.name }}</h1>
+  {% if user.is_authenticated %}
+    {% cvgraph_node_edit_properties topic %}
+  {% endif %}
+
+  {% if topic.description %}
+    {{ topic.description|markdown }}
+  {% endif %}
+
+  {% include 'cvgraph/_topics_shallow.html' with node=topic %}
+
+  {% include 'cvgraph/_notes.html' with node=topic %}
+
+{% endblock %}

@@ -5,7 +5,7 @@ from django.views.generic import RedirectView, TemplateView
 
 from immercv.cvgraph.commands import apply_command
 from immercv.cvgraph.models import get_node_by_id, Person, Project, Role, \
-    Company
+    Company, Topic
 
 
 class CvgraphMeView(RedirectView):
@@ -60,6 +60,12 @@ class CvgraphRoleDetailView(CvgraphModelDetailView):
 
     model = Role
     context_name = 'role'
+
+
+class CvgraphTopicDetailView(CvgraphModelDetailView):
+
+    model = Topic
+    context_name = 'topic'
 
 
 class CvgraphChangeView(RedirectView):

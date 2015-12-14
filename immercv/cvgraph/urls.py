@@ -33,6 +33,11 @@ urlpatterns = [
         name='role_detail',
     ),
     url(
+        regex=r'^topic/(?P<id>\d+)/(?P<slug>[\w-]+)/$',
+        view=views.CvgraphTopicDetailView.as_view(),
+        name='topic_detail',
+    ),
+    url(
         regex=r'^change/$',
         view=views.CvgraphChangeView.as_view(),
         name='change',
