@@ -109,6 +109,21 @@ def generic_update_rel(rel_class, request, labels, params, node_id):
         return rel
 
 
+@command(':Company', 'create', 'topics')
+def create_company_topic(request, labels, params, node_id):
+    generic_create_related(Company, Topic, 'topics', request, labels, params, node_id)
+
+
+@command(':Company', 'link', 'topics')
+def link_company_topic(request, labels, params, node_id):
+    generic_link_related(Company, Topic, 'topics', request, labels, params, node_id)
+
+
+@command(':Company', 'unlink', 'topics')
+def unlink_company_topic(request, labels, params, node_id):
+    generic_unlink_related(Company, Topic, 'topics', request, labels, params, node_id)
+
+
 @command(':Company', 'delete')
 def delete_company(request, labels, params, node_id):
     generic_delete(Company, request, labels, params, node_id)
@@ -224,6 +239,21 @@ def link_role_via_role(request, labels, params, node_id):
 @command(':Role', 'unlink', 'via_roles')
 def unlink_role_via_role(request, labels, params, node_id):
     generic_unlink_related(Role, Role, 'via_roles', request, labels, params, node_id)
+
+
+@command(':Role', 'create', 'topics')
+def create_role_topic(request, labels, params, node_id):
+    generic_create_related(Role, Topic, 'topics', request, labels, params, node_id)
+
+
+@command(':Role', 'link', 'topics')
+def link_role_topic(request, labels, params, node_id):
+    generic_link_related(Role, Topic, 'topics', request, labels, params, node_id)
+
+
+@command(':Role', 'unlink', 'topics')
+def unlink_role_topic(request, labels, params, node_id):
+    generic_unlink_related(Role, Topic, 'topics', request, labels, params, node_id)
 
 
 @command(':Role', 'update')

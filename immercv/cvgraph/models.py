@@ -1,5 +1,5 @@
 from neomodel import IntegerProperty, StructuredNode, StringProperty, db, DateProperty, RelationshipFrom, \
-    RelationshipTo, StructuredRel
+    RelationshipTo, StructuredRel, Relationship
 
 EDITABLE_PROPERTIES = {
     # labels: {property-name, ...},
@@ -145,7 +145,7 @@ class Topic(StructuredNode):
     description = StringProperty()
 
     notes = RelationshipFrom('Note', 'ABOUT')
-    topics = RelationshipFrom('Topic', 'RELATED_TO')
+    topics = Relationship('Topic', 'RELATED_TO')
 
     def __str__(self):
         return self.name
