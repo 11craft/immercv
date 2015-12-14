@@ -9,7 +9,7 @@ EDITABLE_PROPERTIES = {
     ':Note': ['text', 'date'],
     ':Person': ['name'],
     ':Project': ['name', 'description'],
-    ':Role': ['name'],
+    ':Role': ['name', 'description'],
     ':Topic': ['name', 'description'],
 
     # Relationships
@@ -125,6 +125,7 @@ class Project(StructuredNode):
 class Role(StructuredNode):
 
     name = StringProperty(required=True)
+    description = StringProperty()
 
     companies = RelationshipTo('Company', 'WITH')
     notes = RelationshipFrom('Note', 'ABOUT')

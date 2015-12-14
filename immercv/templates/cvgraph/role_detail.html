@@ -1,5 +1,5 @@
 {% extends "cvgraph/base.html" %}
-{% load cvgraph_tags %}
+{% load cvgraph_tags markdown_deux_tags %}
 
 {% block content %}
 
@@ -19,6 +19,10 @@
       {% cvgraph_node_create_related role "companies" "name" %}
       {% cvgraph_node_link_related role "companies" %}
     {% endif %}
+  {% endif %}
+
+  {% if role.description %}
+    {{ role.description|markdown }}
   {% endif %}
 
   {% if role.via_roles %}
