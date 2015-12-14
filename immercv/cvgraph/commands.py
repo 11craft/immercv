@@ -3,7 +3,7 @@ from neomodel import db
 from immercv.cvgraph.forms import form_for_node_properties, \
     form_for_node_link
 from immercv.cvgraph.models import editable_params, get_node_by_id, Person, Note, \
-    Project, Role, PerformedRel, Company, Topic
+    Project, Role, PerformedRel, Company, Topic, label_string
 
 COMMAND_FUNCTIONS = {
     # Created via application of `command` decorator.
@@ -22,7 +22,7 @@ def apply_command(request, params):
     key = (labels, operation, relationship_name)
     fn = COMMAND_FUNCTIONS.get(key)
     if callable(fn):
-        fn(request, params, node_id)
+        fn(request, labels, params, node_id)
 
 
 def command(labels, operation, relationship=None):
@@ -47,272 +47,225 @@ def set_node_properties_from_params(node, params):
         setattr(node, k, v)
 
 
-def create_note(node_class, params, node_id):
+def generic_create_related(node_class, other_node_class, rel_name,
+                           request, labels, params, node_id):
     node = get_node_by_id(node_class, node_id)
-    params = editable_params(params, ':Note')
-    form = form_for_node_properties(Note, params.keys(), params)
+    other_labels = label_string(other_node_class.inherited_labels())
+    params = editable_params(params, other_labels)
+    form = form_for_node_properties(other_node_class, params.keys(), params)
     if form.is_valid():
-        note = create_node_from_params(Note, form.cleaned_data)
-        node.notes.connect(note)
+        other_node = create_node_from_params(other_node_class, form.cleaned_data)
+        rel = getattr(node, rel_name)
+        rel.connect(other_node)
+        return node, other_node
+
+
+def generic_link_related(node_class, other_node_class, rel_name,
+                         request, labels, params, node_id):
+    node = get_node_by_id(node_class, node_id)
+    form = form_for_node_link(other_node_class, params)
+    if form.is_valid():
+        other_node_id = int(form.cleaned_data['link_to'])
+        other_node = get_node_by_id(other_node_class, other_node_id)
+        rel = getattr(node, rel_name)
+        rel.connect(other_node)
+        return node, other_node
+
+
+def generic_unlink_related(node_class, other_node_class, rel_name,
+                           request, labels, params, node_id):
+    node = get_node_by_id(node_class, node_id)
+    other_node_id = int(params['_other_node_id'])
+    other_node = get_node_by_id(other_node_class, other_node_id)
+    rel = getattr(node, rel_name)
+    rel.disconnect(other_node)
+
+
+def generic_delete(node_class, request, labels, params, node_id):
+    node = get_node_by_id(node_class, node_id)
+    node.delete()
+
+
+def generic_update_node(node_class, request, labels, params, node_id):
+    node = get_node_by_id(node_class, node_id)
+    params = editable_params(params, labels)
+    form = form_for_node_properties(node, params.keys(), params)
+    if form.is_valid():
+        set_node_properties_from_params(node, form.cleaned_data)
+        node.save()
+        return node
+
+
+def generic_update_rel(rel_class, request, labels, params, node_id):
+    labels = labels.replace(')-[', ')-[r')
+    query = 'MATCH ({}) WHERE ID(r)={{this}} RETURN r'.format(labels)
+    query_params = dict(this=node_id)
+    results, meta = db.cypher_query(query, query_params)
+    rel = rel_class.inflate(results[0][0])
+    form = form_for_node_properties(rel, params.keys(), params)
+    if form.is_valid():
+        set_node_properties_from_params(rel, form.cleaned_data)
+        rel.save()
+        return rel
 
 
 @command(':Company', 'delete')
-def delete_company(request, params, node_id):
-    company = get_node_by_id(Company, node_id)
-    company.delete()
+def delete_company(request, labels, params, node_id):
+    generic_delete(Company, request, labels, params, node_id)
 
 
 @command(':Company', 'update')
-def update_company(request, params, node_id):
-    company = get_node_by_id(Company, node_id)
-    params = editable_params(params, ':Company')
-    form = form_for_node_properties(company, params.keys(), params)
-    if form.is_valid():
-        set_node_properties_from_params(company, form.cleaned_data)
-        company.save()
+def update_company(request, labels, params, node_id):
+    generic_update_node(Company, request, labels, params, node_id)
 
 
 @command(':Company', 'create', 'notes')
-def create_company_note(request, params, node_id):
-    create_note(Company, params, node_id)
+def create_company_note(request, labels, params, node_id):
+    generic_create_related(Company, Note, 'notes', request, labels, params, node_id)
 
 
 @command(':Note', 'delete')
-def delete_note(request, params, node_id):
-    note = get_node_by_id(Note, node_id)
-    note.delete()
+def delete_note(request, labels, params, node_id):
+    generic_delete(Note, request, labels, params, node_id)
 
 
 @command(':Note', 'update')
-def update_note(request, params, node_id):
-    note = get_node_by_id(Note, node_id)
-    params = editable_params(params, ':Note')
-    form = form_for_node_properties(note, params.keys(), params)
-    if form.is_valid():
-        set_node_properties_from_params(note, form.cleaned_data)
-        note.save()
+def update_note(request, labels, params, node_id):
+    generic_update_node(Note, request, labels, params, node_id)
 
 
 @command(':Person', 'create', 'notes')
-def create_person_note(request, params, node_id):
-    create_note(Person, params, node_id)
+def create_person_note(request, labels, params, node_id):
+    generic_create_related(Person, Note, 'notes', request, labels, params, node_id)
 
 
 @command(':Person', 'create', 'projects')
-def create_person_project(request, params, node_id):
-    person = get_node_by_id(Person, node_id)
-    params = editable_params(params, ':Project')
-    form = form_for_node_properties(Project, params.keys(), params)
-    if form.is_valid():
-        project = create_node_from_params(Project, form.cleaned_data)
-        person.projects.connect(project)
+def create_person_project(request, labels, params, node_id):
+    generic_create_related(Person, Project, 'projects', request, labels, params, node_id)
 
 
 @command(':Person', 'create', 'roles')
-def create_person_role(request, params, node_id):
-    person = get_node_by_id(Person, node_id)
-    params = editable_params(params, ':Role')
-    form = form_for_node_properties(Role, params.keys(), params)
-    if form.is_valid():
-        role = create_node_from_params(Role, form.cleaned_data)
-        person.roles.connect(role)
+def create_person_role(request, labels, params, node_id):
+    generic_create_related(Person, Role, 'roles', request, labels, params, node_id)
 
 
 @command(':Person', 'update')
-def update_person(request, params, node_id):
-    params = editable_params(params, ':Person')
-    person = get_node_by_id(Person, node_id)
-    set_node_properties_from_params(person, params)
-    person.save()
+def update_person(request, labels, params, node_id):
+    generic_update_node(Person, request, labels, params, node_id)
 
 
 @command(':Project', 'delete')
-def delete_project(request, params, node_id):
-    project = get_node_by_id(Project, node_id)
-    project.delete()
+def delete_project(request, labels, params, node_id):
+    generic_delete(Project, request, labels, params, node_id)
 
 
 @command(':Project', 'update')
-def update_project(request, params, node_id):
-    project = get_node_by_id(Project, node_id)
-    params = editable_params(params, ':Project')
-    form = form_for_node_properties(project, params.keys(), params)
-    if form.is_valid():
-        set_node_properties_from_params(project, form.cleaned_data)
-        project.save()
+def update_project(request, labels, params, node_id):
+    generic_update_node(Project, request, labels, params, node_id)
 
 
 @command(':Project', 'create', 'notes')
-def create_project_note(request, params, node_id):
-    create_note(Project, params, node_id)
+def create_project_note(request, labels, params, node_id):
+    generic_create_related(Project, Note, 'notes', request, labels, params, node_id)
 
 
 @command(':Project', 'create', 'topics')
-def create_project_topic(request, params, node_id):
-    project = get_node_by_id(Project, node_id)
-    params = editable_params(params, ':Topic')
-    form = form_for_node_properties(Topic, params.keys(), params)
-    if form.is_valid():
-        topic = create_node_from_params(Topic, form.cleaned_data)
-        project.topics.connect(topic)
+def create_project_topic(request, labels, params, node_id):
+    generic_create_related(Project, Topic, 'topics', request, labels, params, node_id)
 
 
 @command(':Project', 'link', 'topics')
-def link_project_topic(request, params, node_id):
-    project = get_node_by_id(Project, node_id)
-    form = form_for_node_link(Topic, params)
-    if form.is_valid():
-        other_node_id = int(form.cleaned_data['link_to'])
-        topic = get_node_by_id(Topic, other_node_id)
-        project.topics.connect(topic)
+def link_project_topic(request, labels, params, node_id):
+    generic_link_related(Project, Topic, 'topics', request, labels, params, node_id)
 
 
 @command(':Project', 'unlink', 'topics')
-def unlink_project_topic(request, params, node_id):
-    project = get_node_by_id(Project, node_id)
-    topic = get_node_by_id(Topic, int(params['_other_node_id']))
-    project.topics.disconnect(topic)
+def unlink_project_topic(request, labels, params, node_id):
+    generic_unlink_related(Project, Topic, 'topics', request, labels, params, node_id)
 
 
 @command(':Project', 'delete')
-def delete_project(request, params, node_id):
-    project = get_node_by_id(Project, node_id)
-    project.delete()
+def delete_project(request, labels, params, node_id):
+    generic_delete(Project, request, labels, params, node_id)
 
 
 @command(':Role', 'create', 'companies')
-def create_role_company(request, params, node_id):
-    role = get_node_by_id(Role, node_id)
-    params = editable_params(params, ':Company')
-    form = form_for_node_properties(Company, params.keys(), params)
-    if form.is_valid():
-        company = create_node_from_params(Company, form.cleaned_data)
-        role.companies.connect(company)
+def create_role_company(request, labels, params, node_id):
+    generic_create_related(Role, Company, 'companies', request, labels, params, node_id)
 
 
 @command(':Role', 'link', 'companies')
-def link_role_company(request, params, node_id):
-    role = get_node_by_id(Role, node_id)
-    form = form_for_node_link(Company, params)
-    if form.is_valid():
-        other_node_id = int(form.cleaned_data['link_to'])
-        company = get_node_by_id(Company, other_node_id)
-        role.companies.connect(company)
+def link_role_company(request, labels, params, node_id):
+    generic_link_related(Role, Company, 'companies', request, labels, params, node_id)
 
 
 @command(':Role', 'unlink', 'companies')
-def unlink_role_company(request, params, node_id):
-    role = get_node_by_id(Role, node_id)
-    company = get_node_by_id(Company, int(params['_other_node_id']))
-    role.companies.disconnect(company)
+def unlink_role_company(request, labels, params, node_id):
+    generic_unlink_related(Role, Company, 'companies', request, labels, params, node_id)
 
 
 @command(':Role', 'delete')
-def delete_role(request, params, node_id):
-    role = get_node_by_id(Role, node_id)
-    role.delete()
+def delete_role(request, labels, params, node_id):
+    generic_delete(Role, request, labels, params, node_id)
 
 
 @command(':Role', 'create', 'via_roles')
-def create_role_via_role(request, params, node_id):
-    role = get_node_by_id(Role, node_id)
-    params = editable_params(params, ':Role')
-    form = form_for_node_properties(Role, params.keys(), params)
-    if form.is_valid():
-        via_role = create_node_from_params(Role, form.cleaned_data)
-        role.via_roles.connect(via_role)
-        for person in role.people:
-            via_role.people.connect(person)
+def create_role_via_role(request, labels, params, node_id):
+    role, via_role = generic_create_related(Role, Role, 'via_roles', request, labels, params, node_id)
+    for person in role.people:
+        via_role.people.connect(person)
 
 
 @command(':Role', 'link', 'via_roles')
-def link_role_via_role(request, params, node_id):
-    role = get_node_by_id(Role, node_id)
-    form = form_for_node_link(Role, params)
-    if form.is_valid():
-        other_node_id = int(form.cleaned_data['link_to'])
-        via_role = get_node_by_id(Role, other_node_id)
-        role.via_roles.connect(via_role)
+def link_role_via_role(request, labels, params, node_id):
+    generic_link_related(Role, Role, 'via_roles', request, labels, params, node_id)
 
 
 @command(':Role', 'unlink', 'via_roles')
-def unlink_role_via_role(request, params, node_id):
-    role = get_node_by_id(Role, node_id)
-    via_role = get_node_by_id(Role, int(params['_other_node_id']))
-    role.companies.disconnect(via_role)
+def unlink_role_via_role(request, labels, params, node_id):
+    generic_unlink_related(Role, Role, 'via_roles', request, labels, params, node_id)
 
 
 @command(':Role', 'update')
-def update_role(request, params, node_id):
-    role = get_node_by_id(Role, node_id)
-    params = editable_params(params, ':Role')
-    form = form_for_node_properties(role, params.keys(), params)
-    if form.is_valid():
-        set_node_properties_from_params(role, form.cleaned_data)
-        role.save()
+def update_role(request, labels, params, node_id):
+    generic_update_node(Role, request, labels, params, node_id)
 
 
 @command(':Role', 'create', 'notes')
-def create_role_note(request, params, node_id):
-    create_note(Role, params, node_id)
+def create_role_note(request, labels, params, node_id):
+    generic_create_related(Role, Note, 'notes', request, labels, params, node_id)
 
 
 @command('(:Person)-[:PERFORMED]->(:Role)', 'update')
-def update_performed(request, params, node_id):
-    rel = db.cypher_query(
-        'MATCH (:Person)-[r:PERFORMED]->(:Role) WHERE ID(r)={this} RETURN r',
-        dict(this=node_id),
-    )
-    performed = PerformedRel.inflate(rel[0][0][0])
-    form = form_for_node_properties(performed, params.keys(), params)
-    if form.is_valid():
-        set_node_properties_from_params(performed, form.cleaned_data)
-        performed.save()
+def update_performed(request, labels, params, node_id):
+    generic_update_rel(PerformedRel, request, labels, params, node_id)
 
 
 @command(':Topic', 'delete')
-def delete_topic(request, params, node_id):
-    topic = get_node_by_id(Topic, node_id)
-    topic.delete()
+def delete_topic(request, labels, params, node_id):
+    generic_delete(Topic, request, labels, params, node_id)
 
 
 @command(':Topic', 'create', 'notes')
-def create_topic_note(request, params, node_id):
-    create_note(Topic, params, node_id)
+def create_topic_note(request, labels, params, node_id):
+    generic_create_related(Topic, Note, 'notes', request, labels, params, node_id)
 
 
 @command(':Topic', 'create', 'topics')
-def create_topic_other_topic(request, params, node_id):
-    topic = get_node_by_id(Topic, node_id)
-    params = editable_params(params, ':Topic')
-    form = form_for_node_properties(Topic, params.keys(), params)
-    if form.is_valid():
-        other_topic = create_node_from_params(Topic, form.cleaned_data)
-        topic.topics.connect(other_topic)
+def create_topic_other_topic(request, labels, params, node_id):
+    generic_create_related(Topic, Topic, 'topics', request, labels, params, node_id)
 
 
 @command(':Topic', 'link', 'topics')
-def link_topic_other_topic(request, params, node_id):
-    topic = get_node_by_id(Topic, node_id)
-    form = form_for_node_link(Topic, params)
-    if form.is_valid():
-        other_node_id = int(form.cleaned_data['link_to'])
-        other_topic = get_node_by_id(Topic, other_node_id)
-        topic.topics.connect(other_topic)
+def link_topic_other_topic(request, labels, params, node_id):
+    generic_link_related(Topic, Topic, 'topics', request, labels, params, node_id)
 
 
 @command(':Topic', 'unlink', 'topics')
-def unlink_topic_other_topic(request, params, node_id):
-    topic = get_node_by_id(Topic, node_id)
-    other_topic = get_node_by_id(Topic, int(params['_other_node_id']))
-    topic.companies.disconnect(other_topic)
+def unlink_topic_other_topic(request, labels, params, node_id):
+    generic_unlink_related(Topic, Topic, 'topics', request, labels, params, node_id)
 
 
 @command(':Topic', 'update')
-def update_topic(request, params, node_id):
-    topic = get_node_by_id(Topic, node_id)
-    params = editable_params(params, ':Topic')
-    form = form_for_node_properties(topic, params.keys(), params)
-    if form.is_valid():
-        set_node_properties_from_params(topic, form.cleaned_data)
-        topic.save()
+def update_topic(request, labels, params, node_id):
+    generic_update_node(Topic, request, labels, params, node_id)
