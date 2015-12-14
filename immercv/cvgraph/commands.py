@@ -3,7 +3,8 @@ from neomodel import db
 from immercv.cvgraph.forms import form_for_node_properties, \
     form_for_node_link
 from immercv.cvgraph.models import editable_params, get_node_by_id, Person, Note, \
-    Project, Role, PerformedRel, Company, Topic, label_string
+    Project, Role, PerformedRel, Company, Topic, label_string, \
+    ContributedToRel
 
 COMMAND_FUNCTIONS = {
     # Created via application of `command` decorator.
@@ -109,6 +110,9 @@ def generic_update_rel(rel_class, request, labels, params, node_id):
         return rel
 
 
+# -- COMPANY --
+
+
 @command(':Company', 'create', 'topics')
 def create_company_topic(request, labels, params, node_id):
     generic_create_related(Company, Topic, 'topics', request, labels, params, node_id)
@@ -139,6 +143,9 @@ def create_company_note(request, labels, params, node_id):
     generic_create_related(Company, Note, 'notes', request, labels, params, node_id)
 
 
+# -- NOTE --
+
+
 @command(':Note', 'delete')
 def delete_note(request, labels, params, node_id):
     generic_delete(Note, request, labels, params, node_id)
@@ -147,6 +154,9 @@ def delete_note(request, labels, params, node_id):
 @command(':Note', 'update')
 def update_note(request, labels, params, node_id):
     generic_update_node(Note, request, labels, params, node_id)
+
+
+# -- PERSON --
 
 
 @command(':Person', 'create', 'notes')
@@ -169,6 +179,9 @@ def update_person(request, labels, params, node_id):
     generic_update_node(Person, request, labels, params, node_id)
 
 
+# -- PROJECT --
+
+
 @command(':Project', 'delete')
 def delete_project(request, labels, params, node_id):
     generic_delete(Project, request, labels, params, node_id)
@@ -182,6 +195,16 @@ def update_project(request, labels, params, node_id):
 @command(':Project', 'create', 'notes')
 def create_project_note(request, labels, params, node_id):
     generic_create_related(Project, Note, 'notes', request, labels, params, node_id)
+
+
+@command(':Project', 'link', 'roles')
+def link_project_role(request, labels, params, node_id):
+    generic_link_related(Project, Role, 'roles', request, labels, params, node_id)
+
+
+@command(':Project', 'unlink', 'roles')
+def unlink_project_role(request, labels, params, node_id):
+    generic_unlink_related(Project, Role, 'roles', request, labels, params, node_id)
 
 
 @command(':Project', 'create', 'topics')
@@ -204,6 +227,19 @@ def delete_project(request, labels, params, node_id):
     generic_delete(Project, request, labels, params, node_id)
 
 
+@command('(:Person)-[:CONTRIBUTED_TO]->(:Project)', 'update')
+def update_contributed_to(request, labels, params, node_id):
+    generic_update_rel(ContributedToRel, request, labels, params, node_id)
+
+
+# -- ROLE --
+
+
+@command(':Role', 'delete')
+def delete_role(request, labels, params, node_id):
+    generic_delete(Role, request, labels, params, node_id)
+
+
 @command(':Role', 'create', 'companies')
 def create_role_company(request, labels, params, node_id):
     generic_create_related(Role, Company, 'companies', request, labels, params, node_id)
@@ -219,9 +255,21 @@ def unlink_role_company(request, labels, params, node_id):
     generic_unlink_related(Role, Company, 'companies', request, labels, params, node_id)
 
 
-@command(':Role', 'delete')
-def delete_role(request, labels, params, node_id):
-    generic_delete(Role, request, labels, params, node_id)
+@command(':Role', 'create', 'projects')
+def create_role_project(request, labels, params, node_id):
+    role, project = generic_create_related(Role, Project, 'projects', request, labels, params, node_id)
+    for person in role.people:
+        project.people.connect(person)
+
+
+@command(':Role', 'link', 'projects')
+def link_role_project(request, labels, params, node_id):
+    generic_link_related(Role, Project, 'projects', request, labels, params, node_id)
+
+
+@command(':Role', 'unlink', 'projects')
+def unlink_role_project(request, labels, params, node_id):
+    generic_unlink_related(Role, Project, 'projects', request, labels, params, node_id)
 
 
 @command(':Role', 'create', 'via_roles')
@@ -269,6 +317,9 @@ def create_role_note(request, labels, params, node_id):
 @command('(:Person)-[:PERFORMED]->(:Role)', 'update')
 def update_performed(request, labels, params, node_id):
     generic_update_rel(PerformedRel, request, labels, params, node_id)
+
+
+# -- TOPIC --
 
 
 @command(':Topic', 'delete')

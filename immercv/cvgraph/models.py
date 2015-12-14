@@ -47,16 +47,16 @@ class DateRangeRel(StructuredRel):
     end_date = DateProperty()
 
 
-class PerformedRel(DateRangeRel):
-
-    def labels(self):
-        return ['PERFORMED']
-
-
 class ContributedToRel(DateRangeRel):
 
     def labels(self):
         return ['CONTRIBUTED_TO']
+
+
+class PerformedRel(DateRangeRel):
+
+    def labels(self):
+        return ['PERFORMED']
 
 
 class Company(StructuredNode):
@@ -115,6 +115,7 @@ class Project(StructuredNode):
 
     notes = RelationshipFrom('Note', 'ABOUT')
     people = RelationshipFrom('Person', 'CONTRIBUTED_TO', model=ContributedToRel)
+    roles = RelationshipFrom('Role', 'WORKED_ON')
     topics = RelationshipFrom('Topic', 'RELATED_TO')
 
     def __str__(self):
@@ -128,6 +129,7 @@ class Role(StructuredNode):
     companies = RelationshipTo('Company', 'WITH')
     notes = RelationshipFrom('Note', 'ABOUT')
     people = RelationshipFrom('Person', 'PERFORMED', model=PerformedRel)
+    projects = RelationshipTo('Project', 'WORKED_ON')
     topics = RelationshipFrom('Topic', 'RELATED_TO')
     via_roles = RelationshipTo('Role', 'VIA')
 

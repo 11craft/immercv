@@ -51,6 +51,7 @@
             <h4 class="card-title">Projects</h4>
             {% if user.is_authenticated %}
               {% cvgraph_node_create_related person "projects" "name" %}
+              {% cvgraph_node_link_related person "projects" "name" %}
             {% endif %}
           </div>
           {% if person.projects %}

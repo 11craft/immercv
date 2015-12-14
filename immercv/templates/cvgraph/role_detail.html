@@ -52,6 +52,31 @@
     {% endwith %}
   {% endfor %}
 
+  {% if role.projects or user.is_authenticated %}
+    <div class="card">
+      <div class="card-block">
+        <h4 class="card-title">Projects</h4>
+        {% if user.is_authenticated %}
+          {% cvgraph_node_create_related role "projects" "name" %}
+          {% cvgraph_node_link_related role "projects" %}
+        {% endif %}
+      </div>
+      {% if role.projects %}
+        <ul class="list-group list-group-flush">
+          {% for project in role.projects %}
+            <li class="list-group-item">
+              {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=project text=project.name %}
+              {% if user.is_authenticated %}
+                {% cvgraph_node_edit_properties project "name" %}
+                {% cvgraph_node_delete project %}
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  {% endif %}
+
   {% include 'cvgraph/_topics_deep.html' with node=role %}
 
   {% include 'cvgraph/_notes.html' with node=role %}

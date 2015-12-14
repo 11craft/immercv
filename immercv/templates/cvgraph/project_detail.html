@@ -8,6 +8,10 @@
     {% cvgraph_node_edit_properties project %}
   {% endif %}
 
+  {% if project.description %}
+    {{ project.description|markdown }}
+  {% endif %}
+
   {% for person in project.people %}
     {% with performed=project.people|relationship:person %}
       {% if performed.start_date or performed.end_date %}
@@ -25,8 +29,15 @@
     {% endwith %}
   {% endfor %}
 
-  {% if project.description %}
-    {{ project.description|markdown }}
+  {% for role in project.roles %}
+    <p>
+      This project was worked on as
+      {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=role %}.
+    </p>
+  {% endfor %}
+
+  {% if user.is_authenticated %}
+    {% cvgraph_node_link_related project "roles" %}
   {% endif %}
 
   {% include 'cvgraph/_topics_deep.html' with node=project %}
