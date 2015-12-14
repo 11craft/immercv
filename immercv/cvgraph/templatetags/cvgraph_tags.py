@@ -13,7 +13,7 @@ def cvgraph_deep_topics(node):
     query = """
         START n=node({self})
         MATCH n-[*0..]->()<-[:RELATED_TO*1..]-(topics:Topic)
-        RETURN topics
+        RETURN DISTINCT topics
     """
     params = {'self': node._id}
     results, meta = db.cypher_query(query, params)
