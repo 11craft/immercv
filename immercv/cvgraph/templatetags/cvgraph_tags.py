@@ -12,7 +12,9 @@ register = template.Library()
 def cvgraph_deep_topics(node):
     query = """
         START n=node({self})
-        MATCH n-[*0..]->()<-[:RELATED_TO*1..]-(topics:Topic)
+        MATCH (topics:Topic)
+        WHERE (n)<-[*0..]-()<-[:RELATED_TO*1..]-(topics)
+           OR (n:Person)-->()<-[*0..]-()<-[:RELATED_TO*1..]-(topics)
         RETURN DISTINCT topics
     """
     params = {'self': node._id}
