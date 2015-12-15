@@ -18,6 +18,11 @@ urlpatterns = [
         name='company_detail',
     ),
     url(
+        regex=r'^experience/(?P<id>\d+)/(?P<slug>[\w-]+)/$',
+        view=views.CvgraphExperienceDetailView.as_view(),
+        name='experience_detail',
+    ),
+    url(
         regex=r'^person/(?P<id>\d+)/(?P<slug>[\w-]+)/$',
         view=views.CvgraphPersonDetailView.as_view(),
         name='person_detail',

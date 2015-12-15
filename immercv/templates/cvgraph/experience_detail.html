@@ -1,0 +1,28 @@
+{% extends "cvgraph/base.html" %}
+{% load cvgraph_tags markdown_deux_tags %}
+
+{% block content %}
+
+  <h1>{{ experience.title }}</h1>
+  {% if user.is_authenticated %}
+    {% cvgraph_node_edit_properties experience %}
+  {% endif %}
+
+  {% if experience.date %}
+    {{ experience.date }}
+  {% endif %}
+
+  {% if experience.summary %}
+    {{ experience.summary|markdown }}
+  {% endif %}
+
+  {% if experience.body %}
+    <hr>
+    {{ experience.body|markdown }}
+  {% endif %}
+
+  {% include 'cvgraph/_topics_deep.html' with node=experience %}
+
+  {% include 'cvgraph/_notes.html' with node=experience %}
+
+{% endblock %}

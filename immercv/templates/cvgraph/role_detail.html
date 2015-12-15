@@ -81,6 +81,8 @@
     </div>
   {% endif %}
 
+  {% include 'cvgraph/_experiences.html' with node=role %}
+
   {% include 'cvgraph/_topics_deep.html' with node=role %}
 
   {% include 'cvgraph/_notes.html' with node=role %}

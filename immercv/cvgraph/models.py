@@ -6,6 +6,7 @@ EDITABLE_PROPERTIES = {
 
     # Nodes
     ':Company': ['name'],
+    ':Experience': ['title', 'date', 'summary', 'body'],
     ':Note': ['text', 'date'],
     ':Person': ['name'],
     ':Project': ['name', 'description'],
@@ -63,12 +64,27 @@ class Company(StructuredNode):
 
     name = StringProperty(required=True)
 
+    experiences = RelationshipFrom('Experience', 'WITH')
     notes = RelationshipFrom('Note', 'ABOUT')
     roles = RelationshipFrom('Role', 'WITH')
     topics = RelationshipFrom('Topic', 'RELATED_TO')
 
     def __str__(self):
         return self.name
+
+
+class Experience(StructuredNode):
+
+    title = StringProperty(required=True)
+    date = DateProperty()
+    summary = StringProperty()
+    body = StringProperty()
+
+    notes = RelationshipFrom('Note', 'ABOUT')
+    topics = Relationship('Topic', 'RELATED_TO')
+
+    def __str__(self):
+        return self.title
 
 
 class Note(StructuredNode):
@@ -113,6 +129,7 @@ class Project(StructuredNode):
     name = StringProperty(required=True)
     description = StringProperty()
 
+    experiences = RelationshipFrom('Experience', 'WITH')
     notes = RelationshipFrom('Note', 'ABOUT')
     people = RelationshipFrom('Person', 'CONTRIBUTED_TO', model=ContributedToRel)
     roles = RelationshipFrom('Role', 'WORKED_ON')
@@ -128,6 +145,7 @@ class Role(StructuredNode):
     description = StringProperty()
 
     companies = RelationshipTo('Company', 'WITH')
+    experiences = RelationshipFrom('Experience', 'WITH')
     notes = RelationshipFrom('Note', 'ABOUT')
     people = RelationshipFrom('Person', 'PERFORMED', model=PerformedRel)
     projects = RelationshipTo('Project', 'WORKED_ON')
@@ -147,6 +165,7 @@ class Topic(StructuredNode):
     name = StringProperty(required=True)
     description = StringProperty()
 
+    experiences = RelationshipFrom('Experience', 'WITH')
     notes = RelationshipFrom('Note', 'ABOUT')
     topics = Relationship('Topic', 'RELATED_TO')
 

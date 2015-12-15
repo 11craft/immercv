@@ -1,0 +1,30 @@
+{% load cvgraph_tags markdown_deux_tags %}
+
+{% with experiences=node.experiences %}
+  {% if experiences %}
+    <h2>Experiences</h2>
+  {% endif %}
+  {% if user.is_authenticated %}
+    {% cvgraph_node_create_related node "experiences" %}
+  {% endif %}
+  {% for experience in experiences %}
+    <div class="card card-block">
+      <div class="card-text">
+        <h3>{{ experience.title }}</h3>
+        {% if experience.date %}
+          <p class="card-text text-muted">{{ experience.date }}</p>
+        {% endif %}
+        {% if experience.summary %}
+          <div>{{ experience.summary|markdown }}</div>
+        {% endif %}
+        {% if experience.body %}
+          {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:experience_detail' node=experience slugtext=experience.title text="Continue reading..." %}
+        {% endif %}
+      </div>
+      {% if user.is_authenticated %}
+        {% cvgraph_node_edit_properties experience %}
+        {% cvgraph_node_delete experience %}
+      {% endif %}
+    </div>
+  {% endfor %}
+{% endwith %}

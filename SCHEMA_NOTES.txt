@@ -12,10 +12,10 @@
 (:Course {name})
 (:Course) -[:ABOUT]-> (:Topic)
 
-(:Experience {title, text})
-(:Experience) -[:ABOUT]-> (*)
+(:Experience {title, date, summary, body})
+(:Experience) -[:WITH]-> (*)
 
-(:Link {title, url})
+(:Link {title, url, date})
 (:Link) -[:ABOUT]-> (*)
 
 (:Note {text[, date]})

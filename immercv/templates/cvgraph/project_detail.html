@@ -40,6 +40,8 @@
     {% cvgraph_node_link_related project "roles" %}
   {% endif %}
 
+  {% include 'cvgraph/_experiences.html' with node=project %}
+
   {% include 'cvgraph/_topics_deep.html' with node=project %}
 
   {% include 'cvgraph/_notes.html' with node=project %}

@@ -4,7 +4,7 @@ from immercv.cvgraph.forms import form_for_node_properties, \
     form_for_node_link
 from immercv.cvgraph.models import editable_params, get_node_by_id, Person, Note, \
     Project, Role, PerformedRel, Company, Topic, label_string, \
-    ContributedToRel
+    ContributedToRel, Experience
 
 COMMAND_FUNCTIONS = {
     # Created via application of `command` decorator.
@@ -130,11 +130,19 @@ def register_create_notes(node_class):
         generic_create_related(node_class, Note, 'notes', request, labels, params, node_id)
 
 
+def register_create_experiences(node_class):
+    node_labels = label_string(node_class.inherited_labels())
+    @command(node_labels, 'create', 'experiences')
+    def create(request, labels, params, node_id):
+        generic_create_related(node_class, Experience, 'experiences', request, labels, params, node_id)
+
+
 def register_delete_update(node_class):
-    @command(node_class, 'delete')
+    node_labels = label_string(node_class.inherited_labels())
+    @command(node_labels, 'delete')
     def delete(request, labels, params, node_id):
         generic_delete(node_class, request, labels, params, node_id)
-    @command(node_class, 'update')
+    @command(node_labels, 'update')
     def update(request, labels, params, node_id):
         generic_update_node(node_class, request, labels, params, node_id)
 
@@ -143,7 +151,14 @@ def register_delete_update(node_class):
 
 register_delete_update(Company)
 register_create_notes(Company)
+register_create_experiences(Company)
 register_create_link_unlink(Company, Topic, 'topics')
+
+
+# -- EXPERIENCE --
+
+register_delete_update(Experience)
+register_create_notes(Experience)
 
 
 # -- NOTE --
@@ -155,6 +170,7 @@ register_delete_update(Note)
 
 register_delete_update(Person)
 register_create_notes(Person)
+register_create_experiences(Person)
 register_create_link_unlink(Person, Project, 'projects')
 register_create_link_unlink(Person, Role, 'roles')
 
@@ -163,6 +179,7 @@ register_create_link_unlink(Person, Role, 'roles')
 
 register_delete_update(Project)
 register_create_notes(Project)
+register_create_experiences(Project)
 register_create_link_unlink(Project, Role, 'roles')
 register_create_link_unlink(Project, Topic, 'topics')
 
@@ -175,6 +192,7 @@ def update_contributed_to(request, labels, params, node_id):
 
 register_delete_update(Role)
 register_create_notes(Role)
+register_create_experiences(Role)
 register_create_link_unlink(Role, Company, 'companies')
 register_create_link_unlink(Role, Project, 'projects')
 register_create_link_unlink(Role, Role, 'via_roles')
@@ -201,4 +219,5 @@ def update_performed(request, labels, params, node_id):
 
 register_delete_update(Topic)
 register_create_notes(Topic)
+register_create_experiences(Topic)
 register_create_link_unlink(Topic, Topic, 'topics')

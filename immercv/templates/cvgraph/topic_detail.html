@@ -12,6 +12,8 @@
     {{ topic.description|markdown }}
   {% endif %}
 
+  {% include 'cvgraph/_experiences.html' with node=topic %}
+
   {% include 'cvgraph/_topics_shallow.html' with node=topic %}
 
   {% include 'cvgraph/_notes.html' with node=topic %}
