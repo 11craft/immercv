@@ -13,8 +13,8 @@ EDITABLE_PROPERTIES = {
     ':Topic': ['name', 'description'],
 
     # Relationships
-    '(:Person)-[:PERFORMED]->(:Role)': ['start_date', 'end_date'],
     '(:Person)-[:CONTRIBUTED_TO]->(:Project)': ['start_date', 'end_date'],
+    '(:Person)-[:PERFORMED]->(:Role)': ['start_date', 'end_date'],
 }
 
 
