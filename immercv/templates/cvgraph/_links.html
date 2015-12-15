@@ -1,0 +1,29 @@
+{% load cvgraph_tags markdown_deux_tags %}
+
+{% with links=node.links %}
+  {% if links %}
+    <h2>Links</h2>
+  {% endif %}
+  {% if user.is_authenticated %}
+    {% cvgraph_node_create_related node "links" %}
+  {% endif %}
+  {% for link in links %}
+    <div class="card card-block">
+      <div class="card-text">
+        <a href="{{ link.url }}" target="_blank">
+          {{ link.title }}&nbsp;<span class="octicon octicon-link-external"></span>
+        </a>
+        {% if link.summary %}
+          <div>{{ link.summary|markdown }}</div>
+        {% endif %}
+        {% if link.date %}
+          <p class="card-text text-muted">{{ link.date }}</p>
+          {% endif %}
+      </div>
+      {% if user.is_authenticated %}
+        {% cvgraph_node_edit_properties link %}
+        {% cvgraph_node_delete link %}
+      {% endif %}
+    </div>
+  {% endfor %}
+{% endwith %}

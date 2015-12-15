@@ -7,6 +7,7 @@ EDITABLE_PROPERTIES = {
     # Nodes
     ':Company': ['name'],
     ':Experience': ['title', 'date', 'summary', 'body'],
+    ':Link': ['title', 'url', 'date', 'summary'],
     ':Note': ['text', 'date'],
     ':Person': ['name'],
     ':Project': ['name', 'description'],
@@ -65,6 +66,7 @@ class Company(StructuredNode):
     name = StringProperty(required=True)
 
     experiences = RelationshipFrom('Experience', 'WITH')
+    links = RelationshipFrom('Link', 'ABOUT')
     notes = RelationshipFrom('Note', 'ABOUT')
     roles = RelationshipFrom('Role', 'WITH')
     topics = RelationshipFrom('Topic', 'RELATED_TO')
@@ -80,8 +82,20 @@ class Experience(StructuredNode):
     summary = StringProperty()
     body = StringProperty()
 
+    links = RelationshipFrom('Link', 'ABOUT')
     notes = RelationshipFrom('Note', 'ABOUT')
     topics = Relationship('Topic', 'RELATED_TO')
+
+    def __str__(self):
+        return self.title
+
+
+class Link(StructuredNode):
+
+    title = StringProperty(required=True)
+    url = StringProperty(required=True)
+    date = DateProperty()
+    summary = StringProperty()
 
     def __str__(self):
         return self.title
@@ -101,6 +115,7 @@ class Person(StructuredNode):
     django_id = IntegerProperty(unique_index=True, required=True)
     name = StringProperty(required=True)
 
+    links = RelationshipFrom('Link', 'ABOUT')
     notes = RelationshipFrom('Note', 'ABOUT')
     projects = RelationshipTo('Project', 'CONTRIBUTED_TO', model=ContributedToRel)
     roles = RelationshipTo('Role', 'PERFORMED', model=PerformedRel)
@@ -130,6 +145,7 @@ class Project(StructuredNode):
     description = StringProperty()
 
     experiences = RelationshipFrom('Experience', 'WITH')
+    links = RelationshipFrom('Link', 'ABOUT')
     notes = RelationshipFrom('Note', 'ABOUT')
     people = RelationshipFrom('Person', 'CONTRIBUTED_TO', model=ContributedToRel)
     roles = RelationshipFrom('Role', 'WORKED_ON')
@@ -146,6 +162,7 @@ class Role(StructuredNode):
 
     companies = RelationshipTo('Company', 'WITH')
     experiences = RelationshipFrom('Experience', 'WITH')
+    links = RelationshipFrom('Link', 'ABOUT')
     notes = RelationshipFrom('Note', 'ABOUT')
     people = RelationshipFrom('Person', 'PERFORMED', model=PerformedRel)
     projects = RelationshipTo('Project', 'WORKED_ON')
@@ -166,6 +183,7 @@ class Topic(StructuredNode):
     description = StringProperty()
 
     experiences = RelationshipFrom('Experience', 'WITH')
+    links = RelationshipFrom('Link', 'ABOUT')
     notes = RelationshipFrom('Note', 'ABOUT')
     topics = Relationship('Topic', 'RELATED_TO')
 

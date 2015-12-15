@@ -21,8 +21,10 @@
     {{ experience.body|markdown }}
   {% endif %}
 
-  {% include 'cvgraph/_topics_deep.html' with node=experience %}
+  {% include 'cvgraph/_links.html' with node=experience %}
 
   {% include 'cvgraph/_notes.html' with node=experience %}
+
+  {% include 'cvgraph/_topics_deep.html' with node=experience %}
 
 {% endblock %}

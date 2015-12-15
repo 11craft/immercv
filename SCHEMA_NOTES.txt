@@ -15,7 +15,7 @@
 (:Experience {title, date, summary, body})
 (:Experience) -[:WITH]-> (*)
 
-(:Link {title, url, date})
+(:Link {title, url, date, summary})
 (:Link) -[:ABOUT]-> (*)
 
 (:Note {text[, date]})
