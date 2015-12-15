@@ -110,122 +110,61 @@ def generic_update_rel(rel_class, request, labels, params, node_id):
         return rel
 
 
+def register_create_link_unlink(node_class, other_node_class, rel_name):
+    node_labels = label_string(node_class.inherited_labels())
+    @command(node_labels, 'create', rel_name)
+    def create(request, labels, params, node_id):
+        generic_create_related(node_class, other_node_class, rel_name, request, labels, params, node_id)
+    @command(node_labels, 'link', rel_name)
+    def link(request, labels, params, node_id):
+        generic_link_related(node_class, other_node_class, rel_name, request, labels, params, node_id)
+    @command(node_labels, 'unlink', rel_name)
+    def unlink(request, labels, params, node_id):
+        generic_unlink_related(node_class, other_node_class, rel_name, request, labels, params, node_id)
+
+
+def register_create_notes(node_class):
+    node_labels = label_string(node_class.inherited_labels())
+    @command(node_labels, 'create', 'notes')
+    def create(request, labels, params, node_id):
+        generic_create_related(node_class, Note, 'notes', request, labels, params, node_id)
+
+
+def register_delete_update(node_class):
+    @command(node_class, 'delete')
+    def delete(request, labels, params, node_id):
+        generic_delete(node_class, request, labels, params, node_id)
+    @command(node_class, 'update')
+    def update(request, labels, params, node_id):
+        generic_update_node(node_class, request, labels, params, node_id)
+
+
 # -- COMPANY --
 
-
-@command(':Company', 'create', 'topics')
-def create_company_topic(request, labels, params, node_id):
-    generic_create_related(Company, Topic, 'topics', request, labels, params, node_id)
-
-
-@command(':Company', 'link', 'topics')
-def link_company_topic(request, labels, params, node_id):
-    generic_link_related(Company, Topic, 'topics', request, labels, params, node_id)
-
-
-@command(':Company', 'unlink', 'topics')
-def unlink_company_topic(request, labels, params, node_id):
-    generic_unlink_related(Company, Topic, 'topics', request, labels, params, node_id)
-
-
-@command(':Company', 'delete')
-def delete_company(request, labels, params, node_id):
-    generic_delete(Company, request, labels, params, node_id)
-
-
-@command(':Company', 'update')
-def update_company(request, labels, params, node_id):
-    generic_update_node(Company, request, labels, params, node_id)
-
-
-@command(':Company', 'create', 'notes')
-def create_company_note(request, labels, params, node_id):
-    generic_create_related(Company, Note, 'notes', request, labels, params, node_id)
+register_delete_update(Company)
+register_create_notes(Company)
+register_create_link_unlink(Company, Topic, 'topics')
 
 
 # -- NOTE --
 
-
-@command(':Note', 'delete')
-def delete_note(request, labels, params, node_id):
-    generic_delete(Note, request, labels, params, node_id)
-
-
-@command(':Note', 'update')
-def update_note(request, labels, params, node_id):
-    generic_update_node(Note, request, labels, params, node_id)
+register_delete_update(Note)
 
 
 # -- PERSON --
 
-
-@command(':Person', 'create', 'notes')
-def create_person_note(request, labels, params, node_id):
-    generic_create_related(Person, Note, 'notes', request, labels, params, node_id)
-
-
-@command(':Person', 'create', 'projects')
-def create_person_project(request, labels, params, node_id):
-    generic_create_related(Person, Project, 'projects', request, labels, params, node_id)
-
-
-@command(':Person', 'create', 'roles')
-def create_person_role(request, labels, params, node_id):
-    generic_create_related(Person, Role, 'roles', request, labels, params, node_id)
-
-
-@command(':Person', 'update')
-def update_person(request, labels, params, node_id):
-    generic_update_node(Person, request, labels, params, node_id)
+register_delete_update(Person)
+register_create_notes(Person)
+register_create_link_unlink(Person, Project, 'projects')
+register_create_link_unlink(Person, Role, 'roles')
 
 
 # -- PROJECT --
 
-
-@command(':Project', 'delete')
-def delete_project(request, labels, params, node_id):
-    generic_delete(Project, request, labels, params, node_id)
-
-
-@command(':Project', 'update')
-def update_project(request, labels, params, node_id):
-    generic_update_node(Project, request, labels, params, node_id)
-
-
-@command(':Project', 'create', 'notes')
-def create_project_note(request, labels, params, node_id):
-    generic_create_related(Project, Note, 'notes', request, labels, params, node_id)
-
-
-@command(':Project', 'link', 'roles')
-def link_project_role(request, labels, params, node_id):
-    generic_link_related(Project, Role, 'roles', request, labels, params, node_id)
-
-
-@command(':Project', 'unlink', 'roles')
-def unlink_project_role(request, labels, params, node_id):
-    generic_unlink_related(Project, Role, 'roles', request, labels, params, node_id)
-
-
-@command(':Project', 'create', 'topics')
-def create_project_topic(request, labels, params, node_id):
-    generic_create_related(Project, Topic, 'topics', request, labels, params, node_id)
-
-
-@command(':Project', 'link', 'topics')
-def link_project_topic(request, labels, params, node_id):
-    generic_link_related(Project, Topic, 'topics', request, labels, params, node_id)
-
-
-@command(':Project', 'unlink', 'topics')
-def unlink_project_topic(request, labels, params, node_id):
-    generic_unlink_related(Project, Topic, 'topics', request, labels, params, node_id)
-
-
-@command(':Project', 'delete')
-def delete_project(request, labels, params, node_id):
-    generic_delete(Project, request, labels, params, node_id)
-
+register_delete_update(Project)
+register_create_notes(Project)
+register_create_link_unlink(Project, Role, 'roles')
+register_create_link_unlink(Project, Topic, 'topics')
 
 @command('(:Person)-[:CONTRIBUTED_TO]->(:Project)', 'update')
 def update_contributed_to(request, labels, params, node_id):
@@ -234,26 +173,12 @@ def update_contributed_to(request, labels, params, node_id):
 
 # -- ROLE --
 
-
-@command(':Role', 'delete')
-def delete_role(request, labels, params, node_id):
-    generic_delete(Role, request, labels, params, node_id)
-
-
-@command(':Role', 'create', 'companies')
-def create_role_company(request, labels, params, node_id):
-    generic_create_related(Role, Company, 'companies', request, labels, params, node_id)
-
-
-@command(':Role', 'link', 'companies')
-def link_role_company(request, labels, params, node_id):
-    generic_link_related(Role, Company, 'companies', request, labels, params, node_id)
-
-
-@command(':Role', 'unlink', 'companies')
-def unlink_role_company(request, labels, params, node_id):
-    generic_unlink_related(Role, Company, 'companies', request, labels, params, node_id)
-
+register_delete_update(Role)
+register_create_notes(Role)
+register_create_link_unlink(Role, Company, 'companies')
+register_create_link_unlink(Role, Project, 'projects')
+register_create_link_unlink(Role, Role, 'via_roles')
+register_create_link_unlink(Role, Topic, 'topics')
 
 @command(':Role', 'create', 'projects')
 def create_role_project(request, labels, params, node_id):
@@ -261,58 +186,11 @@ def create_role_project(request, labels, params, node_id):
     for person in role.people:
         project.people.connect(person)
 
-
-@command(':Role', 'link', 'projects')
-def link_role_project(request, labels, params, node_id):
-    generic_link_related(Role, Project, 'projects', request, labels, params, node_id)
-
-
-@command(':Role', 'unlink', 'projects')
-def unlink_role_project(request, labels, params, node_id):
-    generic_unlink_related(Role, Project, 'projects', request, labels, params, node_id)
-
-
 @command(':Role', 'create', 'via_roles')
 def create_role_via_role(request, labels, params, node_id):
     role, via_role = generic_create_related(Role, Role, 'via_roles', request, labels, params, node_id)
     for person in role.people:
         via_role.people.connect(person)
-
-
-@command(':Role', 'link', 'via_roles')
-def link_role_via_role(request, labels, params, node_id):
-    generic_link_related(Role, Role, 'via_roles', request, labels, params, node_id)
-
-
-@command(':Role', 'unlink', 'via_roles')
-def unlink_role_via_role(request, labels, params, node_id):
-    generic_unlink_related(Role, Role, 'via_roles', request, labels, params, node_id)
-
-
-@command(':Role', 'create', 'topics')
-def create_role_topic(request, labels, params, node_id):
-    generic_create_related(Role, Topic, 'topics', request, labels, params, node_id)
-
-
-@command(':Role', 'link', 'topics')
-def link_role_topic(request, labels, params, node_id):
-    generic_link_related(Role, Topic, 'topics', request, labels, params, node_id)
-
-
-@command(':Role', 'unlink', 'topics')
-def unlink_role_topic(request, labels, params, node_id):
-    generic_unlink_related(Role, Topic, 'topics', request, labels, params, node_id)
-
-
-@command(':Role', 'update')
-def update_role(request, labels, params, node_id):
-    generic_update_node(Role, request, labels, params, node_id)
-
-
-@command(':Role', 'create', 'notes')
-def create_role_note(request, labels, params, node_id):
-    generic_create_related(Role, Note, 'notes', request, labels, params, node_id)
-
 
 @command('(:Person)-[:PERFORMED]->(:Role)', 'update')
 def update_performed(request, labels, params, node_id):
@@ -321,32 +199,6 @@ def update_performed(request, labels, params, node_id):
 
 # -- TOPIC --
 
-
-@command(':Topic', 'delete')
-def delete_topic(request, labels, params, node_id):
-    generic_delete(Topic, request, labels, params, node_id)
-
-
-@command(':Topic', 'create', 'notes')
-def create_topic_note(request, labels, params, node_id):
-    generic_create_related(Topic, Note, 'notes', request, labels, params, node_id)
-
-
-@command(':Topic', 'create', 'topics')
-def create_topic_other_topic(request, labels, params, node_id):
-    generic_create_related(Topic, Topic, 'topics', request, labels, params, node_id)
-
-
-@command(':Topic', 'link', 'topics')
-def link_topic_other_topic(request, labels, params, node_id):
-    generic_link_related(Topic, Topic, 'topics', request, labels, params, node_id)
-
-
-@command(':Topic', 'unlink', 'topics')
-def unlink_topic_other_topic(request, labels, params, node_id):
-    generic_unlink_related(Topic, Topic, 'topics', request, labels, params, node_id)
-
-
-@command(':Topic', 'update')
-def update_topic(request, labels, params, node_id):
-    generic_update_node(Topic, request, labels, params, node_id)
+register_delete_update(Topic)
+register_create_notes(Topic)
+register_create_link_unlink(Topic, Topic, 'topics')
