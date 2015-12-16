@@ -13,8 +13,6 @@
   {% for topic in topics %}
     <div style="display:inline-block">
       {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:topic_detail' node=topic text=topic.name class="btn btn-link" %}
-      {% cvgraph_node_delete "button" topic %}
-      {% cvgraph_node_delete "editor" topic %}
       {% cvgraph_node_unlink "button" node "topics" topic %}
       {% cvgraph_node_unlink "editor" node "topics" topic %}
     </div>
