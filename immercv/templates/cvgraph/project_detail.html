@@ -3,14 +3,19 @@
 
 {% block content %}
 
-  <h1>{{ project.name }}</h1>
-  {% if user.is_authenticated %}
-    {% cvgraph_node_edit_properties project %}
-  {% endif %}
+  <div>
+    <h1>{{ project.name }}</h1>
 
-  {% if project.description %}
-    {{ project.description|markdown }}
-  {% endif %}
+    {% if user.is_authenticated%}
+      {% cvgraph_node_edit_properties "button" project %}
+      {% cvgraph_node_edit_properties "editor" project %}
+    {% endif %}
+
+    {% if project.description %}
+      {{ project.description|markdown }}
+    {% endif %}
+  </div>
+  <div class="clearfix"></div>
 
   {% for person in project.people %}
     {% with performed=project.people|relationship:person %}
@@ -24,7 +29,8 @@
         </p>
       {% endif %}
       {% if user.is_authenticated %}
-        {% cvgraph_rel_edit_properties performed %}
+        {% cvgraph_rel_edit_properties "button" performed %}
+        {% cvgraph_rel_edit_properties "editor" performed %}
       {% endif %}
     {% endwith %}
   {% endfor %}
@@ -37,7 +43,8 @@
   {% endfor %}
 
   {% if user.is_authenticated %}
-    {% cvgraph_node_link_related project "roles" %}
+    {% cvgraph_node_link_related "button" project "roles" %}
+    {% cvgraph_node_link_related "editor" project "roles" %}
   {% endif %}
 
   {% include 'cvgraph/_experiences.html' with node=project %}

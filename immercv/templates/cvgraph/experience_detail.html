@@ -5,7 +5,8 @@
 
   <h1>{{ experience.title }}</h1>
   {% if user.is_authenticated %}
-    {% cvgraph_node_edit_properties experience %}
+    {% cvgraph_node_edit_properties "button" experience %}
+    {% cvgraph_node_edit_properties "editor" experience %}
   {% endif %}
 
   {% if experience.date %}

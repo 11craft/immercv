@@ -5,7 +5,8 @@
     <h2>Experiences</h2>
   {% endif %}
   {% if user.is_authenticated %}
-    {% cvgraph_node_create_related node "experiences" %}
+    {% cvgraph_node_create_related "button" node "experiences" %}
+    {% cvgraph_node_create_related "editor" node "experiences" %}
   {% endif %}
   {% for experience in experiences %}
     <div class="card card-block">
@@ -22,8 +23,10 @@
         {% endif %}
       </div>
       {% if user.is_authenticated %}
-        {% cvgraph_node_edit_properties experience %}
-        {% cvgraph_node_delete experience %}
+        {% cvgraph_node_edit_properties "button" experience %}
+        {% cvgraph_node_edit_properties "editor" experience %}
+        {% cvgraph_node_delete "button" experience %}
+        {% cvgraph_node_delete "editor" experience %}
       {% endif %}
     </div>
   {% endfor %}

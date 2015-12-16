@@ -1,20 +1,28 @@
 {% load crispy_forms_tags %}
-<div class="cvgraph-editor">
-  <button type="button" class="btn btn-secondary btn-sm" data-property-editor="true">
-    <span class="octicon octicon-x"></span>&nbsp;{{ other_labels }}
-  </button>
-  <form style="display:none" action="{% url 'cvgraph:change' %}" class="form-horizontal" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="_labels" value="{{ labels }}"/>
-    <input type="hidden" name="_id" value="{{ node_id }}"/>
-    <input type="hidden" name="_operation" value="unlink"/>
-    <input type="hidden" name="_other_node_id" value="{{ other_node_id }}"/>
-    <input type="hidden" name="_relationship_name" value="{{ relationship_name }}"/>
-    <p>Are you sure you want to unlink this?</p>
-    <div class="control-group">
-      <div class="controls">
-        <button type="submit" class="btn">Confirm</button>
+
+{% if control == "button" %}
+  <div class="cvgraph-button">
+    <button type="button" class="btn btn-secondary btn-sm" data-property-editor="true" data-form-id="form-node-{{ node_id }}-unlink-{{ other_node_id }}">
+      <span class="octicon octicon-x"></span>&nbsp;{{ other_labels }}
+    </button>
+  </div>
+{% endif %}
+
+{% if control == "editor" %}
+  <div style="display:none" id="form-node-{{ node_id }}-unlink-{{ other_node_id }}" class="cvgraph-editor">
+    <form action="{% url 'cvgraph:change' %}" class="form-horizontal" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="_labels" value="{{ labels }}"/>
+      <input type="hidden" name="_id" value="{{ node_id }}"/>
+      <input type="hidden" name="_operation" value="unlink"/>
+      <input type="hidden" name="_other_node_id" value="{{ other_node_id }}"/>
+      <input type="hidden" name="_relationship_name" value="{{ relationship_name }}"/>
+      <p>Are you sure you want to unlink this?</p>
+      <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn">Confirm</button>
+        </div>
       </div>
-    </div>
-  </form>
-</div>
+    </form>
+  </div>
+{% endif %}

@@ -5,7 +5,8 @@
 
   <h1>{{ company.name }}</h1>
   {% if user.is_authenticated %}
-    {% cvgraph_node_edit_properties company %}
+    {% cvgraph_node_edit_properties "button" company %}
+    {% cvgraph_node_edit_properties "editor" company %}
   {% endif %}
 
   <table class="table">
@@ -24,7 +25,8 @@
               <td>
                 {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=role.name %}
                 {% if user.is_authenticated %}
-                  {% cvgraph_rel_edit_properties performed %}
+                  {% cvgraph_rel_edit_properties "button" performed %}
+                  {% cvgraph_rel_edit_properties "editor" performed %}
                 {% endif %}
               </td>
               <td>

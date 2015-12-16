@@ -5,7 +5,8 @@
     <h2>Links</h2>
   {% endif %}
   {% if user.is_authenticated %}
-    {% cvgraph_node_create_related node "links" %}
+    {% cvgraph_node_create_related "button" node "links" %}
+    {% cvgraph_node_create_related "editor" node "links" %}
   {% endif %}
   {% for link in links %}
     <div class="card card-block">
@@ -21,8 +22,10 @@
           {% endif %}
       </div>
       {% if user.is_authenticated %}
-        {% cvgraph_node_edit_properties link %}
-        {% cvgraph_node_delete link %}
+        {% cvgraph_node_edit_properties "button" link %}
+        {% cvgraph_node_edit_properties "editor" link %}
+        {% cvgraph_node_delete "button" link %}
+        {% cvgraph_node_delete "editor" link %}
       {% endif %}
     </div>
   {% endfor %}

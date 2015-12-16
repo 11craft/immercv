@@ -5,19 +5,24 @@
 
   <h1>{{ role.name }}</h1>
   {% if user.is_authenticated %}
-    {% cvgraph_node_edit_properties role %}
+    {% cvgraph_node_edit_properties "button" role %}
+    {% cvgraph_node_edit_properties "editor" role %}
   {% endif %}
 
   {% if role.companies %}
     {% with company=role.companies.single.0 %}
       <h2>{% include 'cvgraph/_node_detail_link.html' with url='cvgraph:company_detail' node=company text=company.name %}</h2>
-      {% cvgraph_node_delete company %}
-      {% cvgraph_node_unlink role "companies" company %}
+      {% cvgraph_node_delete "button" company %}
+      {% cvgraph_node_delete "editor" company %}
+      {% cvgraph_node_unlink "button" role "companies" company %}
+      {% cvgraph_node_unlink "editor" role "companies" company %}
     {% endwith %}
   {% else %}
     {% if user.is_authenticated %}
-      {% cvgraph_node_create_related role "companies" "name" %}
-      {% cvgraph_node_link_related role "companies" %}
+      {% cvgraph_node_create_related "button" role "companies" "name" %}
+      {% cvgraph_node_create_related "editor" role "companies" "name" %}
+      {% cvgraph_node_link_related "button" role "companies" %}
+      {% cvgraph_node_link_related "editor" role "companies" %}
     {% endif %}
   {% endif %}
 
@@ -29,13 +34,17 @@
     {% for via_role in role.via_roles %}
       (via
       {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=via_role text=via_role %})
-      {% cvgraph_node_delete via_role %}
-      {% cvgraph_node_unlink role "via_roles" via_role %}
+      {% cvgraph_node_delete "button" via_role %}
+      {% cvgraph_node_delete "editor" via_role %}
+      {% cvgraph_node_unlink "button" role "via_roles" via_role %}
+      {% cvgraph_node_unlink "editor" role "via_roles" via_role %}
     {% endfor %}
   {% else %}
     {% if user.is_authenticated %}
-      {% cvgraph_node_create_related role "via_roles" "name" %}
-      {% cvgraph_node_link_related role "via_roles" %}
+      {% cvgraph_node_create_related "button" role "via_roles" "name" %}
+      {% cvgraph_node_create_related "editor" role "via_roles" "name" %}
+      {% cvgraph_node_link_related "button" role "via_roles" %}
+      {% cvgraph_node_link_related "editor" role "via_roles" %}
     {% endif %}
   {% endif %}
 
@@ -51,7 +60,8 @@
         </p>
       {% endif %}
       {% if user.is_authenticated %}
-        {% cvgraph_rel_edit_properties performed %}
+        {% cvgraph_rel_edit_properties "button" performed %}
+        {% cvgraph_rel_edit_properties "editor" performed %}
       {% endif %}
     {% endwith %}
   {% endfor %}
@@ -61,8 +71,10 @@
       <div class="card-block">
         <h4 class="card-title">Projects</h4>
         {% if user.is_authenticated %}
-          {% cvgraph_node_create_related role "projects" "name" %}
-          {% cvgraph_node_link_related role "projects" %}
+          {% cvgraph_node_create_related "button" role "projects" "name" %}
+          {% cvgraph_node_create_related "editor" role "projects" "name" %}
+          {% cvgraph_node_link_related "button" role "projects" %}
+          {% cvgraph_node_link_related "editor" role "projects" %}
         {% endif %}
       </div>
       {% if role.projects %}
@@ -71,8 +83,10 @@
             <li class="list-group-item">
               {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=project text=project.name %}
               {% if user.is_authenticated %}
-                {% cvgraph_node_edit_properties project "name" %}
-                {% cvgraph_node_delete project %}
+                {% cvgraph_node_edit_properties "button" project "name" %}
+                {% cvgraph_node_edit_properties "editor" project "name" %}
+                {% cvgraph_node_delete "button" project %}
+                {% cvgraph_node_delete "editor" project %}
               {% endif %}
             </li>
           {% endfor %}

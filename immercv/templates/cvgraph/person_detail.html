@@ -5,7 +5,8 @@
 
   <h1>{{ person.name }}</h1>
   {% if user.is_authenticated %}
-    {% cvgraph_node_edit_properties person "name" %}
+    {% cvgraph_node_edit_properties "button" person "name" %}
+    {% cvgraph_node_edit_properties "editor" person "name" %}
   {% endif %}
 
   <div class="row">
@@ -16,7 +17,8 @@
           <div class="card-block">
             <h4 class="card-title">Roles</h4>
             {% if user.is_authenticated %}
-              {% cvgraph_node_create_related person "roles" "name" %}
+              {% cvgraph_node_create_related "button" person "roles" "name" %}
+              {% cvgraph_node_create_related "editor" person "roles" "name" %}
             {% endif %}
           </div>
           {% if person.roles %}
@@ -33,8 +35,10 @@
                     {% endwith %}
                   {% endif %}
                   {% if user.is_authenticated %}
-                    {% cvgraph_node_edit_properties role %}
-                    {% cvgraph_node_delete role %}
+                    {% cvgraph_node_edit_properties "button" role %}
+                    {% cvgraph_node_edit_properties "editor" role %}
+                    {% cvgraph_node_delete "button" role %}
+                    {% cvgraph_node_delete "editor" role %}
                   {% endif %}
                 </li>
               {% endfor %}
@@ -50,8 +54,10 @@
           <div class="card-block">
             <h4 class="card-title">Projects</h4>
             {% if user.is_authenticated %}
-              {% cvgraph_node_create_related person "projects" "name" %}
-              {% cvgraph_node_link_related person "projects" "name" %}
+              {% cvgraph_node_create_related "button" person "projects" "name" %}
+              {% cvgraph_node_create_related "editor" person "projects" "name" %}
+              {% cvgraph_node_link_related "button" person "projects" "name" %}
+              {% cvgraph_node_link_related "editor" person "projects" "name" %}
             {% endif %}
           </div>
           {% if person.projects %}
@@ -60,8 +66,10 @@
                 <li class="list-group-item">
                   {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=project text=project.name %}
                   {% if user.is_authenticated %}
-                    {% cvgraph_node_edit_properties project "name" %}
-                    {% cvgraph_node_delete project %}
+                    {% cvgraph_node_edit_properties "button" project "name" %}
+                    {% cvgraph_node_edit_properties "editor" project "name" %}
+                    {% cvgraph_node_delete "button" project %}
+                    {% cvgraph_node_delete "editor" project %}
                   {% endif %}
                 </li>
               {% endfor %}

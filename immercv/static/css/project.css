@@ -20,3 +20,7 @@
 
 [hidden][style="display: block;"] {
   display: block !important; }
+
+.cvgraph-button {
+  display: inline-block;
+}

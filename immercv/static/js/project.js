@@ -2,13 +2,16 @@
 
 $(function () {
 
+  var $buttons = $('.cvgraph-button');
   var $editors = $('.cvgraph-editor');
   var $previewToggle = $('#preview-toggle');
 
-  $editors.find('form').hide();
-  $editors.find('button[data-property-editor=true]').click(function () {
+  $editors.hide();
+  $buttons.find('button[data-property-editor=true]').click(function () {
     var $button = $(this);
-    var $form = $button.parent().find('form');
+    var selector = '#' + $button.data('form-id');
+    var $form = $(selector);
+    console.log($form);
     $button.toggleClass('active');
     $form.toggle(100);
     if ($form.is(':visible')) {
@@ -17,7 +20,10 @@ $(function () {
   });
 
   $previewToggle.click(function () {
-    $editors.toggle(100);
+    $buttons.toggle(100);
+    if ($buttons.is(':hidden')) {
+      $editors.hide();
+    }
     if ($previewToggle.prop('checked') == true) {
       document.cookie = 'preview=1; path=/';
     } else {
@@ -37,7 +43,10 @@ $(function () {
   }
 
   if (getCookie('preview') == '1') {
-    $editors.toggle();
+    $buttons.toggle();
+    if ($buttons.is(':hidden')) {
+      $editors.hide();
+    }
     $previewToggle.prop('checked', true);
   }
 

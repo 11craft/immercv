@@ -1,20 +1,27 @@
-
 {% load crispy_forms_tags %}
-<div class="cvgraph-editor">
-  <button type="button" class="btn btn-secondary btn-sm" data-property-editor="true">
-    <span class="octicon octicon-plus"></span>&nbsp;{{ labels }}&nbsp;{{ relationship_name }}
-  </button>
-  <form style="display:none" action="{% url 'cvgraph:change' %}" class="form-horizontal" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="_labels" value="{{ labels }}"/>
-    <input type="hidden" name="_id" value="{{ node_id }}"/>
-    <input type="hidden" name="_relationship_name" value="{{ relationship_name }}"/>
-    <input type="hidden" name="_operation" value="create"/>
-    {{ form|crispy }}
-    <div class="control-group">
-      <div class="controls">
-        <button type="submit" class="btn">Create</button>
+
+{% if control == "button" %}
+  <div class="cvgraph-button">
+    <button type="button" class="btn btn-secondary btn-sm" data-property-editor="true" data-form-id="form-node-{{ node_id }}-create-related-{{ relationship_name }}">
+      <span class="octicon octicon-plus"></span>&nbsp;{{ labels }}&nbsp;{{ relationship_name }}
+    </button>
+  </div>
+{% endif %}
+
+{% if control == "editor" %}
+  <div style="display:none" id="form-node-{{ node_id }}-create-related-{{ relationship_name }}" class="cvgraph-editor">
+    <form action="{% url 'cvgraph:change' %}" class="form-horizontal" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="_labels" value="{{ labels }}"/>
+      <input type="hidden" name="_id" value="{{ node_id }}"/>
+      <input type="hidden" name="_relationship_name" value="{{ relationship_name }}"/>
+      <input type="hidden" name="_operation" value="create"/>
+      {{ form|crispy }}
+      <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn">Create</button>
+        </div>
       </div>
-    </div>
-  </form>
-</div>
+    </form>
+  </div>
+{% endif %}

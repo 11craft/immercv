@@ -5,7 +5,8 @@
 
   <h1>{{ topic.name }}</h1>
   {% if user.is_authenticated %}
-    {% cvgraph_node_edit_properties topic %}
+    {% cvgraph_node_edit_properties "button" topic %}
+    {% cvgraph_node_edit_properties "editor" topic %}
   {% endif %}
 
   {% if topic.description %}
