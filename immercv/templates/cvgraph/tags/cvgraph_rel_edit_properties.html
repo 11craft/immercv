@@ -4,7 +4,7 @@
 {% if control == "button" %}
   <div class="cvgraph-button">
     <button type="button" class="btn btn-secondary btn-sm" data-property-editor="true" data-form-id="form-rel-{{ node_id }}-edit-properties">
-      <span class="octicon octicon-pencil"></span>&nbsp;{{ rel.start_node }}&nbsp;&rarr;&nbsp;{{ rel.end_node }}
+      <span class="octicon octicon-pencil"></span>&nbsp;{{ rel.start_node }}&nbsp;&rarr;&nbsp;:{{ rel.end_node.labels.0 }}
     </button>
   </div>
 {% endif %}
