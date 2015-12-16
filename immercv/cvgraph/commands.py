@@ -4,7 +4,7 @@ from immercv.cvgraph.forms import form_for_node_properties, \
     form_for_node_link
 from immercv.cvgraph.models import editable_params, get_node_by_id, Person, Note, \
     Project, Role, PerformedRel, Company, Topic, label_string, \
-    ContributedToRel, Experience, Link
+    ContributedToRel, Experience, Link, CV
 
 COMMAND_FUNCTIONS = {
     # Created via application of `command` decorator.
@@ -161,6 +161,11 @@ register_create_notes(Company)
 register_create_link_unlink(Company, Topic, 'topics')
 
 
+# -- CV --
+
+register_delete_update(CV)
+
+
 # -- EXPERIENCE --
 
 register_delete_update(Experience)
@@ -184,6 +189,7 @@ register_delete_update(Person)
 register_create_experiences(Person)
 register_create_links(Person)
 register_create_notes(Person)
+register_create_link_unlink(Person, CV, 'cvs')
 register_create_link_unlink(Person, Project, 'projects')
 register_create_link_unlink(Person, Role, 'roles')
 

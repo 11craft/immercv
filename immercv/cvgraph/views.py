@@ -5,7 +5,7 @@ from django.views.generic import RedirectView, TemplateView
 
 from immercv.cvgraph.commands import apply_command
 from immercv.cvgraph.models import get_node_by_id, Person, Project, Role, \
-    Company, Topic, Experience
+    Company, Topic, Experience, CV
 
 
 class CvgraphMeView(RedirectView):
@@ -42,6 +42,24 @@ class CvgraphCompanyDetailView(CvgraphModelDetailView):
 
     model = Company
     context_name = 'company'
+
+
+class CvgraphCVDetailView(CvgraphModelDetailView):
+
+    model = CV
+    context_name = 'cv'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        spec = data['cv'].spec
+        return data
+
+    def get_template_names(self):
+        default = super().get_template_names()
+        if 'print' in self.request.GET:
+            return 'cvgraph/cv_detail_print.html'
+        else:
+            return default
 
 
 class CvgraphExperienceDetailView(CvgraphModelDetailView):

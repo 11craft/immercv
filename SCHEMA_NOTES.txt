@@ -6,6 +6,8 @@
 
 (:Company {name, description})
 
+(:CV {name, spec})
+
 (:ContactInfo {type, value})
 (:ContactInfo) -[:FOR]-> (:Person)
 
@@ -27,6 +29,7 @@
 (:Person) -[:GRADUATED_FROM {date(, degree)}-> (:School)
 (:Person) -[:HAD {(date)}]-> (:Experience)
 (:Person) -[:PERFORMED {startDate(, endDate)}]-> (:Role)
+(:Person) -[:PREPARED]-> (:CV)
 (:Person) -[:READ]-> (:Book)
 (:Person) -[:RECEIVED {date})-> (:Certification)
 

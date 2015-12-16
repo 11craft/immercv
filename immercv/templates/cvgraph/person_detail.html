@@ -9,6 +9,19 @@
     {% cvgraph_node_edit_properties "editor" person "name" %}
   {% endif %}
 
+  {% if user.is_authenticated %}
+    <h2>CVs</h2>
+    {% cvgraph_node_create_related "button" person "cvs" "name" %}
+    {% cvgraph_node_create_related "editor" person "cvs" "name" %}
+    <ul>
+      {% for cv in person.cvs %}
+        <li>
+          {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:cv_detail' node=cv text=cv.name %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
   <div class="row">
 
     <div class="col-md-6">

@@ -1,0 +1,15 @@
+{% extends "cvgraph/base.html" %}
+{% load cvgraph_tags markdown_deux_tags %}
+
+{% block content %}
+
+  <h1>{{ cv.name }}</h1>
+
+  {% if user.is_authenticated %}
+    {% cvgraph_node_edit_properties "button" cv %}
+    {% cvgraph_node_edit_properties "editor" cv %}
+    {% cvgraph_node_delete "button" cv %}
+    {% cvgraph_node_delete "editor" cv %}
+  {% endif %}
+
+{% endblock %}
