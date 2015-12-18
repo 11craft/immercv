@@ -1,3 +1,5 @@
+from urllib.parse import urlsplit
+
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.utils.text import slugify
@@ -6,6 +8,21 @@ from django.views.generic import RedirectView, TemplateView
 from immercv.cvgraph.commands import apply_command
 from immercv.cvgraph.models import get_node_by_id, Person, Project, Role, \
     Company, Topic, Experience, CV
+
+
+
+DECODE_NODE_MAP = {
+    'experience': Experience,
+    'project': Project,
+}
+
+
+def decode_node_url(url):
+    node_type, node_id = urlsplit(url).path.split('/')[1:3]
+    node_id = int(node_id)
+    node_class = DECODE_NODE_MAP[node_type]
+    node = get_node_by_id(node_class, node_id)
+    return node, node_type
 
 
 class CvgraphMeView(RedirectView):
@@ -52,6 +69,25 @@ class CvgraphCVDetailView(CvgraphModelDetailView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         spec = data['cv'].spec
+        data['cv_items'] = items = []
+        for line in (spec or '').splitlines():
+            if line == '':
+                continue
+            template_name, value = line.split(': ', 1)
+            template = 'cvgraph/cv/{}/container.html'.format(template_name)
+            if value.startswith('http://') or value.startswith('https://'):
+                node, node_type = decode_node_url(value)
+                text = None
+            else:
+                node, node_type = None, 'text'
+                text = value
+            inner_template = 'cvgraph/cv/{}/{}.html'.format(template_name, node_type)
+            items.append({
+                'template': template,
+                'inner_template': inner_template,
+                'node': node,
+                'text': text,
+            })
         return data
 
     def get_template_names(self):
