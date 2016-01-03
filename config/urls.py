@@ -9,6 +9,8 @@ from django.views.generic import TemplateView
 from django.views import defaults as default_views
 
 urlpatterns = [
+    url(r'^robots.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain'), name='robots-txt'),
+
     url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name="home"),
     url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name="about"),
 
