@@ -13,8 +13,10 @@
   {% for topic in topics %}
     <div style="display:inline-block">
       {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:topic_detail' node=topic text=topic.name class="btn btn-link" %}
-      {% cvgraph_node_unlink "button" node "topics" topic %}
-      {% cvgraph_node_unlink "editor" node "topics" topic %}
+      {% if user.is_authenticated %}
+        {% cvgraph_node_unlink "button" node "topics" topic %}
+        {% cvgraph_node_unlink "editor" node "topics" topic %}
+      {% endif %}
     </div>
   {% endfor %}
 {% endif %}
