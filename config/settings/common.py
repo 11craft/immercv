@@ -172,6 +172,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 # Your stuff: custom template context processors go here
+                'immercv.context_processors.caching',
             ],
         },
     },

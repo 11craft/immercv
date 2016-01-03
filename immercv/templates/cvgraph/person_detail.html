@@ -1,103 +1,107 @@
 {% extends "cvgraph/base.html" %}
-{% load cvgraph_tags %}
+{% load cache cvgraph_tags %}
 
 {% block content %}
 
-  <h1>{{ person.name }}</h1>
-  {% if user.is_authenticated %}
-    {% cvgraph_node_edit_properties "button" person "name" %}
-    {% cvgraph_node_edit_properties "editor" person "name" %}
-  {% endif %}
+  {% cache cache_timeout person user.is_authenticated person|node_id %}
 
-  {% if user.is_authenticated %}
-    <h2>CVs</h2>
-    {% cvgraph_node_create_related "button" person "cvs" "name" %}
-    {% cvgraph_node_create_related "editor" person "cvs" "name" %}
-    <ul>
-      {% for cv in person.cvs %}
-        <li>
-          {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:cv_detail' node=cv text=cv.name %}
-        </li>
-      {% endfor %}
-    </ul>
-  {% endif %}
+    <h1>{{ person.name }}</h1>
+    {% if user.is_authenticated %}
+      {% cvgraph_node_edit_properties "button" person "name" %}
+      {% cvgraph_node_edit_properties "editor" person "name" %}
+    {% endif %}
 
-  <div class="row">
+    {% if user.is_authenticated %}
+      <h2>CVs</h2>
+      {% cvgraph_node_create_related "button" person "cvs" "name" %}
+      {% cvgraph_node_create_related "editor" person "cvs" "name" %}
+      <ul>
+        {% for cv in person.cvs %}
+          <li>
+            {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:cv_detail' node=cv text=cv.name %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 
-    <div class="col-md-6">
-      {% if person.roles or user.is_authenticated %}
-        <div class="card">
-          <div class="card-block">
-            <h4 class="card-title">Roles</h4>
-            {% if user.is_authenticated %}
-              {% cvgraph_node_create_related "button" person "roles" "name" %}
-              {% cvgraph_node_create_related "editor" person "roles" "name" %}
+    <div class="row">
+
+      <div class="col-md-6">
+        {% if person.roles or user.is_authenticated %}
+          <div class="card">
+            <div class="card-block">
+              <h4 class="card-title">Roles</h4>
+              {% if user.is_authenticated %}
+                {% cvgraph_node_create_related "button" person "roles" "name" %}
+                {% cvgraph_node_create_related "editor" person "roles" "name" %}
+              {% endif %}
+            </div>
+            {% if person.roles %}
+              <ul class="list-group list-group-flush">
+                {% for role in person.roles %}
+                  <li class="list-group-item">
+                    {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=role.name %}
+                    {% if role.companies %}
+                      {% with company=role.companies.single.0 %}
+                        <br>
+                        <small>
+                          {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=company.name slugtext=role.name %}
+                        </small>
+                      {% endwith %}
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                      {% cvgraph_node_edit_properties "button" role %}
+                      {% cvgraph_node_edit_properties "editor" role %}
+                      {% cvgraph_node_delete "button" role %}
+                      {% cvgraph_node_delete "editor" role %}
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
             {% endif %}
           </div>
-          {% if person.roles %}
-            <ul class="list-group list-group-flush">
-              {% for role in person.roles %}
-                <li class="list-group-item">
-                  {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=role.name %}
-                  {% if role.companies %}
-                    {% with company=role.companies.single.0 %}
-                      <br>
-                      <small>
-                        {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=company.name slugtext=role.name %}
-                      </small>
-                    {% endwith %}
-                  {% endif %}
-                  {% if user.is_authenticated %}
-                    {% cvgraph_node_edit_properties "button" role %}
-                    {% cvgraph_node_edit_properties "editor" role %}
-                    {% cvgraph_node_delete "button" role %}
-                    {% cvgraph_node_delete "editor" role %}
-                  {% endif %}
-                </li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-        </div>
-      {% endif %}
-    </div>
+        {% endif %}
+      </div>
 
-    <div class="col-md-6">
-      {% if person.projects or user.is_authenticated %}
-        <div class="card">
-          <div class="card-block">
-            <h4 class="card-title">Projects</h4>
-            {% if user.is_authenticated %}
-              {% cvgraph_node_create_related "button" person "projects" "name" %}
-              {% cvgraph_node_create_related "editor" person "projects" "name" %}
-              {% cvgraph_node_link_related "button" person "projects" "name" %}
-              {% cvgraph_node_link_related "editor" person "projects" "name" %}
+      <div class="col-md-6">
+        {% if person.projects or user.is_authenticated %}
+          <div class="card">
+            <div class="card-block">
+              <h4 class="card-title">Projects</h4>
+              {% if user.is_authenticated %}
+                {% cvgraph_node_create_related "button" person "projects" "name" %}
+                {% cvgraph_node_create_related "editor" person "projects" "name" %}
+                {% cvgraph_node_link_related "button" person "projects" "name" %}
+                {% cvgraph_node_link_related "editor" person "projects" "name" %}
+              {% endif %}
+            </div>
+            {% if person.projects %}
+              <ul class="list-group list-group-flush">
+                {% for project in person.projects %}
+                  <li class="list-group-item">
+                    {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=project text=project.name %}
+                    {% if user.is_authenticated %}
+                      {% cvgraph_node_edit_properties "button" project "name" %}
+                      {% cvgraph_node_edit_properties "editor" project "name" %}
+                      {% cvgraph_node_delete "button" project %}
+                      {% cvgraph_node_delete "editor" project %}
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
             {% endif %}
           </div>
-          {% if person.projects %}
-            <ul class="list-group list-group-flush">
-              {% for project in person.projects %}
-                <li class="list-group-item">
-                  {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=project text=project.name %}
-                  {% if user.is_authenticated %}
-                    {% cvgraph_node_edit_properties "button" project "name" %}
-                    {% cvgraph_node_edit_properties "editor" project "name" %}
-                    {% cvgraph_node_delete "button" project %}
-                    {% cvgraph_node_delete "editor" project %}
-                  {% endif %}
-                </li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-        </div>
-      {% endif %}
+        {% endif %}
+      </div>
+
     </div>
 
-  </div>
+    {% include 'cvgraph/_links.html' with node=person %}
 
-  {% include 'cvgraph/_links.html' with node=person %}
+    {% include 'cvgraph/_notes.html' with node=person %}
 
-  {% include 'cvgraph/_notes.html' with node=person %}
+    {% include 'cvgraph/_topics_deep.html' with node=person heading_text="Topics" %}
 
-  {% include 'cvgraph/_topics_deep.html' with node=person heading_text="Topics" %}
+  {% endcache %}
 
 {% endblock %}
