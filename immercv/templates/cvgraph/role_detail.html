@@ -1,106 +1,110 @@
 {% extends "cvgraph/base.html" %}
-{% load cvgraph_tags markdown_deux_tags %}
+{% load cache cvgraph_tags markdown_deux_tags %}
 
 {% block content %}
 
-  <h1>{{ role.name }}</h1>
-  {% if user.is_authenticated %}
-    {% cvgraph_node_edit_properties "button" role %}
-    {% cvgraph_node_edit_properties "editor" role %}
-  {% endif %}
+  {% cache cache_timeout role user.is_authenticated role|node_id %}
 
-  {% if role.companies %}
-    {% with company=role.companies.single.0 %}
-      <h2>{% include 'cvgraph/_node_detail_link.html' with url='cvgraph:company_detail' node=company text=company.name %}</h2>
-      {% cvgraph_node_delete "button" company %}
-      {% cvgraph_node_delete "editor" company %}
-      {% cvgraph_node_unlink "button" role "companies" company %}
-      {% cvgraph_node_unlink "editor" role "companies" company %}
-    {% endwith %}
-  {% else %}
+    <h1>{{ role.name }}</h1>
     {% if user.is_authenticated %}
-      {% cvgraph_node_create_related "button" role "companies" "name" %}
-      {% cvgraph_node_create_related "editor" role "companies" "name" %}
-      {% cvgraph_node_link_related "button" role "companies" %}
-      {% cvgraph_node_link_related "editor" role "companies" %}
+      {% cvgraph_node_edit_properties "button" role %}
+      {% cvgraph_node_edit_properties "editor" role %}
     {% endif %}
-  {% endif %}
 
-  {% if role.description %}
-    {{ role.description|markdown }}
-  {% endif %}
-
-  {% if role.via_roles %}
-    {% for via_role in role.via_roles %}
-      (via
-      {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=via_role text=via_role %})
-      {% cvgraph_node_delete "button" via_role %}
-      {% cvgraph_node_delete "editor" via_role %}
-      {% cvgraph_node_unlink "button" role "via_roles" via_role %}
-      {% cvgraph_node_unlink "editor" role "via_roles" via_role %}
-    {% endfor %}
-  {% else %}
-    {% if user.is_authenticated %}
-      {% cvgraph_node_create_related "button" role "via_roles" "name" %}
-      {% cvgraph_node_create_related "editor" role "via_roles" "name" %}
-      {% cvgraph_node_link_related "button" role "via_roles" %}
-      {% cvgraph_node_link_related "editor" role "via_roles" %}
-    {% endif %}
-  {% endif %}
-
-  {% for person in role.people %}
-    {% with performed=role.people|relationship:person %}
-      {% if performed.start_date or performed.end_date %}
-        <p>
-          {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:person_detail' node=person text=person.name %}
-          {% if performed.start_date and performed.end_date %}
-          performed this role between {{ performed.start_date }} and {{ performed.end_date }}{% elif performed.start_date %}
-          started performing this role {{ performed.start_date }}{% elif performed.end_date %}
-          will perform this role until {{ performed.end_date }}{% endif %}.
-        </p>
-      {% endif %}
+    {% if role.companies %}
+      {% with company=role.companies.single.0 %}
+        <h2>{% include 'cvgraph/_node_detail_link.html' with url='cvgraph:company_detail' node=company text=company.name %}</h2>
+        {% cvgraph_node_delete "button" company %}
+        {% cvgraph_node_delete "editor" company %}
+        {% cvgraph_node_unlink "button" role "companies" company %}
+        {% cvgraph_node_unlink "editor" role "companies" company %}
+      {% endwith %}
+    {% else %}
       {% if user.is_authenticated %}
-        {% cvgraph_rel_edit_properties "button" performed %}
-        {% cvgraph_rel_edit_properties "editor" performed %}
+        {% cvgraph_node_create_related "button" role "companies" "name" %}
+        {% cvgraph_node_create_related "editor" role "companies" "name" %}
+        {% cvgraph_node_link_related "button" role "companies" %}
+        {% cvgraph_node_link_related "editor" role "companies" %}
       {% endif %}
-    {% endwith %}
-  {% endfor %}
+    {% endif %}
 
-  {% if role.projects or user.is_authenticated %}
-    <div class="card">
-      <div class="card-block">
-        <h4 class="card-title">Projects</h4>
+    {% if role.description %}
+      {{ role.description|markdown }}
+    {% endif %}
+
+    {% if role.via_roles %}
+      {% for via_role in role.via_roles %}
+        (via
+        {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=via_role text=via_role %})
+        {% cvgraph_node_delete "button" via_role %}
+        {% cvgraph_node_delete "editor" via_role %}
+        {% cvgraph_node_unlink "button" role "via_roles" via_role %}
+        {% cvgraph_node_unlink "editor" role "via_roles" via_role %}
+      {% endfor %}
+    {% else %}
+      {% if user.is_authenticated %}
+        {% cvgraph_node_create_related "button" role "via_roles" "name" %}
+        {% cvgraph_node_create_related "editor" role "via_roles" "name" %}
+        {% cvgraph_node_link_related "button" role "via_roles" %}
+        {% cvgraph_node_link_related "editor" role "via_roles" %}
+      {% endif %}
+    {% endif %}
+
+    {% for person in role.people %}
+      {% with performed=role.people|relationship:person %}
+        {% if performed.start_date or performed.end_date %}
+          <p>
+            {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:person_detail' node=person text=person.name %}
+            {% if performed.start_date and performed.end_date %}
+            performed this role between {{ performed.start_date }} and {{ performed.end_date }}{% elif performed.start_date %}
+            started performing this role {{ performed.start_date }}{% elif performed.end_date %}
+            will perform this role until {{ performed.end_date }}{% endif %}.
+          </p>
+        {% endif %}
         {% if user.is_authenticated %}
-          {% cvgraph_node_create_related "button" role "projects" "name" %}
-          {% cvgraph_node_create_related "editor" role "projects" "name" %}
-          {% cvgraph_node_link_related "button" role "projects" %}
-          {% cvgraph_node_link_related "editor" role "projects" %}
+          {% cvgraph_rel_edit_properties "button" performed %}
+          {% cvgraph_rel_edit_properties "editor" performed %}
+        {% endif %}
+      {% endwith %}
+    {% endfor %}
+
+    {% if role.projects or user.is_authenticated %}
+      <div class="card">
+        <div class="card-block">
+          <h4 class="card-title">Projects</h4>
+          {% if user.is_authenticated %}
+            {% cvgraph_node_create_related "button" role "projects" "name" %}
+            {% cvgraph_node_create_related "editor" role "projects" "name" %}
+            {% cvgraph_node_link_related "button" role "projects" %}
+            {% cvgraph_node_link_related "editor" role "projects" %}
+          {% endif %}
+        </div>
+        {% if role.projects %}
+          <ul class="list-group list-group-flush">
+            {% for project in role.projects %}
+              <li class="list-group-item">
+                {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=project text=project.name %}
+                {% if user.is_authenticated %}
+                  {% cvgraph_node_edit_properties "button" project "name" %}
+                  {% cvgraph_node_edit_properties "editor" project "name" %}
+                  {% cvgraph_node_delete "button" project %}
+                  {% cvgraph_node_delete "editor" project %}
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
         {% endif %}
       </div>
-      {% if role.projects %}
-        <ul class="list-group list-group-flush">
-          {% for project in role.projects %}
-            <li class="list-group-item">
-              {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=project text=project.name %}
-              {% if user.is_authenticated %}
-                {% cvgraph_node_edit_properties "button" project "name" %}
-                {% cvgraph_node_edit_properties "editor" project "name" %}
-                {% cvgraph_node_delete "button" project %}
-                {% cvgraph_node_delete "editor" project %}
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </div>
-  {% endif %}
+    {% endif %}
 
-  {% include 'cvgraph/_experiences.html' with node=role %}
+    {% include 'cvgraph/_experiences.html' with node=role %}
 
-  {% include 'cvgraph/_links.html' with node=role %}
+    {% include 'cvgraph/_links.html' with node=role %}
 
-  {% include 'cvgraph/_notes.html' with node=role %}
+    {% include 'cvgraph/_notes.html' with node=role %}
 
-  {% include 'cvgraph/_topics_deep.html' with node=role %}
+    {% include 'cvgraph/_topics_deep.html' with node=role %}
+
+  {% endcache %}
 
 {% endblock %}

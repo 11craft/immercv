@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-
-{% load cvgraph_tags markdown_deux_tags %}
+{% load cache cvgraph_tags markdown_deux_tags %}
 
 {% block navbar %}
   {# empty #}
@@ -10,25 +9,29 @@
 
 {% block content %}
 
-  <h1>{{ cv.people.single.0.name }}</h1>
+  {% cache cache_timeout cv_print user.is_authenticated cv|node_id %}
 
-  <div class="clearfix"></div>
+    <h1>{{ cv.people.single.0.name }}</h1>
 
-  {% for cv_item in cv_items %}
-    {% include cv_item.template with inner_template=cv_item.inner_template node=cv_item.node text=cv_item.text %}
-  {% endfor %}
+    <div class="clearfix"></div>
 
-  <footer>
-    <div>
-      Prepared for
-      {{ cv.name }}{% if cv.date %} on {{ cv.date }}{% endif %}.
-    </div>
-    <div>
-      Visit the <em>ImmerCV</em> version at
-      <a href="http://{{ request.META.HTTP_HOST }}{% url 'cvgraph:cv_detail' id=cv|node_id slug=cv.name|slugify %}">
-        http://{{ request.META.HTTP_HOST }}{% url 'cvgraph:cv_detail' id=cv|node_id slug=cv.name|slugify %}
-      </a>
-    </div>
-  </footer>
+    {% for cv_item in cv_items %}
+      {% include cv_item.template with inner_template=cv_item.inner_template node=cv_item.node text=cv_item.text %}
+    {% endfor %}
+
+    <footer>
+      <div>
+        Prepared for
+        {{ cv.name }}{% if cv.date %} on {{ cv.date }}{% endif %}.
+      </div>
+      <div>
+        Visit the <em>ImmerCV</em> version at
+        <a href="http://{{ request.META.HTTP_HOST }}{% url 'cvgraph:cv_detail' id=cv|node_id slug=cv.name|slugify %}">
+          http://{{ request.META.HTTP_HOST }}{% url 'cvgraph:cv_detail' id=cv|node_id slug=cv.name|slugify %}
+        </a>
+      </div>
+    </footer>
+
+  {% endcache %}
 
 {% endblock %}

@@ -1,21 +1,25 @@
 {% extends "cvgraph/base.html" %}
-{% load cvgraph_tags markdown_deux_tags %}
+{% load cache cvgraph_tags markdown_deux_tags %}
 
 {% block content %}
 
-  <h1>{{ cv.name }}</h1>
+  {% cache cache_timeout cv user.is_authenticated cv|node_id %}
 
-  {% if user.is_authenticated %}
-    {% cvgraph_node_edit_properties "button" cv %}
-    {% cvgraph_node_edit_properties "editor" cv %}
-    {% cvgraph_node_delete "button" cv %}
-    {% cvgraph_node_delete "editor" cv %}
-  {% endif %}
+    <h1>{{ cv.name }}</h1>
 
-  <div class="clearfix"></div>
+    {% if user.is_authenticated %}
+      {% cvgraph_node_edit_properties "button" cv %}
+      {% cvgraph_node_edit_properties "editor" cv %}
+      {% cvgraph_node_delete "button" cv %}
+      {% cvgraph_node_delete "editor" cv %}
+    {% endif %}
 
-  {% for cv_item in cv_items %}
-    {% include cv_item.template with inner_template=cv_item.inner_template node=cv_item.node text=cv_item.text %}
-  {% endfor %}
+    <div class="clearfix"></div>
+
+    {% for cv_item in cv_items %}
+      {% include cv_item.template with inner_template=cv_item.inner_template node=cv_item.node text=cv_item.text %}
+    {% endfor %}
+
+  {% endcache %}
 
 {% endblock %}
