@@ -9,7 +9,7 @@ RUN pip install -r /requirements/production.txt
 
 RUN groupadd -r django && useradd -r -g django django
 COPY . /app
-RUN chown -R django /app
+RUN chown -R django /app && chmod -R g+rwX /app
 
 COPY ./compose/django/gunicorn.sh /gunicorn.sh
 COPY ./compose/django/entrypoint.sh /entrypoint.sh

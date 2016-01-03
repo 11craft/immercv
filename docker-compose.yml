@@ -4,13 +4,26 @@ postgres:
     - /data/immercv/postgres:/var/lib/postgresql/data
   env_file: .env
 
+neo4j:
+  build: ./compose/neo4j
+  volumes:
+    - /data/immercv/neo4j:/data
+  ulimits:
+    nofile:
+      soft: 40000
+      hard: 40000
+  env_file: .env
+  ports:
+    - "127.0.0.1:7474:7474" # Administrative access via SSH + port forwarding.
+
 django:
   build: .
   user: django
   links:
     - postgres
     - redis
-  command: /gunicorn.sh
+    - neo4j
+  command: bash -c "source check_up_containers.bash; check_up postgres postgres 5432; check_up neo4j neo4j 7474; /gunicorn.sh"
   env_file: .env
 
 nginx:
