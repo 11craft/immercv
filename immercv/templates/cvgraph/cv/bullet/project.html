@@ -1,1 +1,7 @@
+{% load markdown_deux_tags %}
 {{ node.name }}
+{% if node.description %}
+  <small class="text-muted">
+    {{ node.description|markdown }}
+  </small>
+{% endif %}
