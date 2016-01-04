@@ -8,8 +8,7 @@ from django.views.generic import RedirectView, TemplateView
 from immercv.cvgraph.commands import apply_command
 from immercv.cvgraph.models import get_node_by_id, Person, Project, Role, \
     Company, Topic, Experience, CV
-
-
+from immercv.users.models import User
 
 DECODE_NODE_MAP = {
     'experience': Experience,
@@ -23,6 +22,25 @@ def decode_node_url(url):
     node_class = DECODE_NODE_MAP[node_type]
     node = get_node_by_id(node_class, node_id)
     return node, node_type
+
+
+class CvgraphPersonOfFirstUserView(RedirectView):
+
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        user = User.objects.first()
+        print(user)
+        if user is None:
+            return reverse('about')
+        try:
+            person = Person.for_user(user)
+        except Person.DoesNotExist:
+            return reverse('about')
+        return reverse('cvgraph:person_detail', kwargs=dict(
+            id=person._id,
+            slug=slugify(person.name),
+        ))
 
 
 class CvgraphMeView(RedirectView):
