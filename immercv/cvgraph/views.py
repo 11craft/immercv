@@ -90,13 +90,6 @@ class CvgraphCVDetailView(CvgraphModelDetailView):
             })
         return data
 
-    def get_template_names(self):
-        default = super().get_template_names()
-        if 'print' in self.request.GET:
-            return 'cvgraph/cv_detail_print.html'
-        else:
-            return default
-
 
 class CvgraphExperienceDetailView(CvgraphModelDetailView):
 

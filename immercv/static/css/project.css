@@ -25,7 +25,7 @@
   display: inline-block;
 }
 
-body.print footer {
+footer.visible-print-block {
   position: fixed;
   bottom: 0px;
   border-top: 1px solid black;
