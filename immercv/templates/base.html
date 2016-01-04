@@ -30,8 +30,8 @@
 
     {% block navbar %}
       <div class="m-b">
-        <nav class="navbar navbar-dark navbar-static-top bg-inverse">
-          <div class="container">
+        <nav class="navbar navbar-dark navbar-full bg-inverse">
+          <div class="container-fluid">
             <a class="navbar-brand" href="/">ImmerCV</a>
             <button type="button" class="navbar-toggler hidden-sm-up pull-right" data-toggle="collapse" data-target="#bs-navbar-collapse-1">
               &#9776;
@@ -50,7 +50,7 @@
                 {% endblock %}
               </ul>
 
-              <ul class="nav navbar-nav pull-right">
+              <ul class="nav navbar-nav pull-xs-right">
                 {% if request.user.is_authenticated %}
                   <li class="nav-item">
                     <a href="{% url 'cvgraph:me' %}" class="nav-link">My CV</a>
@@ -73,7 +73,7 @@
       </div>
     {% endblock %}
 
-    <div class="container">
+    <div class="container-fluid">
 
       {% if messages %}
           {% for message in messages %}
