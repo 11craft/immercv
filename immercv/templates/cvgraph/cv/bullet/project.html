@@ -1,5 +1,5 @@
 {% load markdown_deux_tags %}
-{{ node.name }}
+{% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=node text=node.name %}
 {% if node.description %}
   <small class="text-muted">
     {{ node.description|markdown }}
