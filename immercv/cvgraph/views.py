@@ -126,7 +126,7 @@ class CvgraphChangeView(RedirectView):
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
-        if self.request.method != 'POST':
+        if self.request.method != 'POST' or not self.request.user.is_authenticated():
             raise Http404()
         else:
             params = self.request.POST.copy()
