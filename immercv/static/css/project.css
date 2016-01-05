@@ -25,12 +25,17 @@
   display: inline-block;
 }
 
-footer.visible-print-block {
-  position: fixed;
-  bottom: 0px;
+footer {
   border-top: 1px solid black;
   margin-top: 2em;
   font-size: small;
+}
+
+@media print {
+  footer {
+    position: fixed;
+    bottom: 0;
+  }
 }
 
 .cv-sidebar {
