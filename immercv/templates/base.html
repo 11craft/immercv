@@ -104,5 +104,24 @@
       <!-- place project specific Javascript in this file -->
       <script src="{% static 'js/project.js' %}"></script>
     {% endblock javascript %}
+    {% block analytics_body %}
+      {% if PIWIK_SERVER and not request.user.is_superuser %}
+        <!-- Piwik -->
+        <script type="text/javascript">
+          var _paq = _paq || [];
+          _paq.push(['trackPageView']);
+          _paq.push(['enableLinkTracking']);
+          (function() {
+            var u="//{{ PIWIK_SERVER }}/";
+            _paq.push(['setTrackerUrl', u+'piwik.php']);
+            _paq.push(['setSiteId', {{ PIWIK_SITE_ID }}]);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+          })();
+        </script>
+        <noscript><p><img src="//{{ PIWIK_SERVER }}/piwik.php?idsite={{ PIWIK_SITE_ID }}" style="border:0;" alt="" /></p></noscript>
+        <!-- End Piwik Code -->
+      {% endif %}
+    {% endblock %}
   </body>
 </html>

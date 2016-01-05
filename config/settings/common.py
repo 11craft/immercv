@@ -173,6 +173,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 # Your stuff: custom template context processors go here
+                'immercv.context_processors.analytics',
                 'immercv.context_processors.caching',
             ],
         },
@@ -243,3 +244,9 @@ AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
 ADMIN_URL = r'^admin/'
 
 # Your common stuff: Below this line define 3rd party library settings
+
+# ANALYTICS
+# ---------
+
+PIWIK_SERVER = env('PIWIK_SERVER')
+PIWIK_SITE_ID = env('PIWIK_SITE_ID')
