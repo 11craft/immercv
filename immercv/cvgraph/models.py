@@ -6,10 +6,10 @@ EDITABLE_PROPERTIES = {
 
     # Nodes
     ':Company': ['name'],
-    ':CV': ['name', 'spec'],
-    ':Experience': ['title', 'date', 'summary', 'body'],
-    ':Link': ['title', 'url', 'date', 'summary'],
-    ':Note': ['text', 'date'],
+    ':CV': ['name', 'date', 'spec'],
+    ':Experience': ['title', 'date', 'publish_date', 'summary', 'body'],
+    ':Link': ['title', 'url', 'publish_date', 'summary'],
+    ':Note': ['text', 'publish_date'],
     ':Person': ['name'],
     ':Project': ['name', 'description'],
     ':Role': ['name', 'description'],
@@ -92,12 +92,15 @@ class Experience(StructuredNode):
 
     title = StringProperty(required=True)
     date = DateProperty()
+    publish_date = DateProperty()
     summary = StringProperty()
     body = StringProperty()
 
     links = RelationshipFrom('Link', 'ABOUT')
     notes = RelationshipFrom('Note', 'ABOUT')
-    topics = Relationship('Topic', 'RELATED_TO')
+    projects = RelationshipTo('Project', 'WITH')
+    roles = RelationshipTo('Role', 'WITH')
+    topics = RelationshipFrom('Topic', 'RELATED_TO')
 
     def __str__(self):
         return self.title
@@ -107,7 +110,7 @@ class Link(StructuredNode):
 
     title = StringProperty(required=True)
     url = StringProperty(required=True)
-    date = DateProperty()
+    publish_date = DateProperty()
     summary = StringProperty()
 
     def __str__(self):
@@ -117,7 +120,7 @@ class Link(StructuredNode):
 class Note(StructuredNode):
 
     text = StringProperty(required=True)
-    date = DateProperty()
+    publish_date = DateProperty()
 
     def __str__(self):
         return u'Note'

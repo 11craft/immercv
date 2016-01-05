@@ -17,8 +17,8 @@
         {% if link.summary %}
           <div>{{ link.summary|markdown }}</div>
         {% endif %}
-        {% if link.date %}
-          <p class="card-text text-muted">{{ link.date }}</p>
+        {% if link.publish_date %}
+          <p class="card-text text-muted">{{ link.publish_date }}</p>
           {% endif %}
       </div>
       {% if user.is_authenticated %}

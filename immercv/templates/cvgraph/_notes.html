@@ -12,8 +12,8 @@
     <div class="card-text">
       {{ note.text|markdown }}
     </div>
-    {% if note.date %}
-      <p class="card-text text-muted">{{ note.date }}</p>
+    {% if note.publish_date %}
+      <p class="card-text text-muted">{{ note.publish_date }}</p>
     {% endif %}
     {% if user.is_authenticated %}
       {% cvgraph_node_edit_properties "button" note %}

@@ -11,8 +11,12 @@
       {% cvgraph_node_edit_properties "editor" experience %}
     {% endif %}
 
-    {% if experience.date %}
-      {{ experience.date }}
+    {% if experience.date and not experience.publish_date %}
+      <p>circa {{ experience.date }}</p>
+    {% elif experience.date and experience.publish_date %}
+      <p>circa {{ experience.date }} (published {{ experience.publish_date }})</p>
+    {% elif experience.publish_date %}
+      <p>published {{ experience.publish_date }}</p>
     {% endif %}
 
     {% if experience.summary %}
