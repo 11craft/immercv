@@ -24,25 +24,6 @@ def decode_node_url(url):
     return node, node_type
 
 
-class CvgraphPersonOfFirstUserView(RedirectView):
-
-    permanent = False
-
-    def get_redirect_url(self, *args, **kwargs):
-        user = User.objects.first()
-        print(user)
-        if user is None:
-            return reverse('about')
-        try:
-            person = Person.for_user(user)
-        except Person.DoesNotExist:
-            return reverse('about')
-        return reverse('cvgraph:person_detail', kwargs=dict(
-            id=person._id,
-            slug=slugify(person.name),
-        ))
-
-
 class CvgraphMeView(RedirectView):
 
     permanent = False
@@ -62,6 +43,8 @@ class CvgraphModelDetailView(TemplateView):
 
     model = None
     context_name = None
+    template_dir = 'cvgraph'
+    template_suffix = 'detail'
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -70,7 +53,7 @@ class CvgraphModelDetailView(TemplateView):
         return data
 
     def get_template_names(self):
-        return ['cvgraph/{}_detail.html'.format(self.context_name)]
+        return ['{}/{}_{}.html'.format(self.template_dir, self.context_name, self.template_suffix)]
 
 
 class CvgraphCompanyDetailView(CvgraphModelDetailView):

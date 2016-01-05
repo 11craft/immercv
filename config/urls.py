@@ -5,16 +5,14 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.views.generic import TemplateView, RedirectView
+from django.views.generic import TemplateView
 from django.views import defaults as default_views
 
-from immercv.cvgraph.views import CvgraphPersonOfFirstUserView
+from immercv.cvblog.views import CvblogPersonOfFirstUserView
 
 
 urlpatterns = [
     url(r'^robots.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain'), name='robots-txt'),
-
-    url(r'^$', CvgraphPersonOfFirstUserView.as_view(), name="home"),
 
     url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name="about"),
 
@@ -26,7 +24,9 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
     # Your stuff: custom urls includes go here
-    url(r'', include('immercv.cvgraph.urls', namespace='cvgraph'))
+    url(r'^$', CvblogPersonOfFirstUserView.as_view(), name="home"),
+    url(r'^blog/', include('immercv.cvblog.urls', namespace='cvblog')),
+    url(r'', include('immercv.cvgraph.urls', namespace='cvgraph')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

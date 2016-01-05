@@ -155,6 +155,48 @@ class Person(StructuredNode):
             name=user.name if len(user.name) > 0 else user.username,
         ).save()
 
+    def published_experiences(self):
+        results = db.cypher_query(
+            """
+            MATCH (n:Experience)-[:WITH]->()<-[*]-(p:Person)
+            WHERE ID(p)={id} AND n.publish_date IS NOT NULL
+            RETURN DISTINCT n
+            """,
+            dict(id=self._id)
+        )
+        return [
+            Experience.inflate(result['n'])
+            for result in results[0]
+        ]
+
+    def published_notes(self):
+        results = db.cypher_query(
+            """
+            MATCH (n:Note)-[:ABOUT]->()<-[*]-(p:Person)
+            WHERE ID(p)={id} AND n.publish_date IS NOT NULL
+            RETURN DISTINCT n
+            """,
+            dict(id=self._id)
+        )
+        return [
+            Note.inflate(result['n'])
+            for result in results[0]
+        ]
+
+    def published_links(self):
+        results = db.cypher_query(
+            """
+            MATCH (n:Link)-[:ABOUT]->()<-[*]-(p:Person)
+            WHERE ID(p)={id} AND n.publish_date IS NOT NULL
+            RETURN DISTINCT n
+            """,
+            dict(id=self._id)
+        )
+        return [
+            Link.inflate(result['n'])
+            for result in results[0]
+        ]
+
 
 class Project(StructuredNode):
 
