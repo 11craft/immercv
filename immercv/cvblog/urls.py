@@ -9,6 +9,11 @@ urlpatterns = [
     url(
         regex=r'^(?P<id>\d+)/(?P<slug>[\w-]+)/$',
         view=views.PersonPostsView.as_view(),
-        name='person_blog',
+        name='person_posts',
+    ),
+    url(
+        regex=r'^(?P<id>\d+)/(?P<slug>[\w-]+)/rss/$',
+        view=views.PersonPostsFeed(),
+        name='person_posts_feed',
     ),
 ]
