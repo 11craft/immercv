@@ -51,7 +51,7 @@ def cvgraph_node_create_related(control, node, relationship_name, *property_name
 
 
 @register.inclusion_tag('cvgraph/tags/cvgraph_node_link_related.html')
-def cvgraph_node_link_related(control, node, relationship_name, *property_names):
+def cvgraph_node_link_related(control, node, relationship_name):
     labels = label_string(node.labels())
     rel = getattr(node, relationship_name)
     other_node_class = rel.definition['node_class']

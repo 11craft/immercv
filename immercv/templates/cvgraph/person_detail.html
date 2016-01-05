@@ -71,8 +71,8 @@
               {% if user.is_authenticated %}
                 {% cvgraph_node_create_related "button" person "projects" "name" %}
                 {% cvgraph_node_create_related "editor" person "projects" "name" %}
-                {% cvgraph_node_link_related "button" person "projects" "name" %}
-                {% cvgraph_node_link_related "editor" person "projects" "name" %}
+                {% cvgraph_node_link_related "button" person "projects" %}
+                {% cvgraph_node_link_related "editor" person "projects" %}
               {% endif %}
             </div>
             {% if person.projects %}
