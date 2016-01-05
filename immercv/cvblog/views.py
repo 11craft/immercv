@@ -24,7 +24,7 @@ class CvblogPersonOfFirstUserView(RedirectView):
             person = Person.for_user(user)
         except Person.DoesNotExist:
             return reverse('about')
-        return reverse('cvblog:person_blog', kwargs=dict(
+        return reverse('cvblog:person_posts', kwargs=dict(
             id=person._id,
             slug=slugify(person.name),
         ))
