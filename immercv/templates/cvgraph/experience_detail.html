@@ -24,6 +24,10 @@
       {{ experience.body|markdown }}
     {% endif %}
 
+    {% include 'cvgraph/_projects.html' with node=experience %}
+
+    {% include 'cvgraph/_roles.html' with node=experience %}
+
     {% include 'cvgraph/_links.html' with node=experience %}
 
     {% include 'cvgraph/_notes.html' with node=experience %}

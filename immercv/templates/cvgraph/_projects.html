@@ -1,0 +1,25 @@
+{% load cvgraph_tags markdown_deux_tags %}
+
+{% with projects=node.projects %}
+  {% if projects %}
+    <h2>Related projects</h2>
+  {% endif %}
+  {% if user.is_authenticated %}
+    {% cvgraph_node_link_related "button" node "projects" %}
+    {% cvgraph_node_link_related "editor" node "projects" %}
+  {% endif %}
+  {% for project in projects %}
+    <div class="card card-block">
+      <div class="card-text">
+        {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=project text=project.name %}
+        {% if project.description %}
+          <div>{{ project.description|markdown }}</div>
+        {% endif %}
+      </div>
+      {% if user.is_authenticated %}
+        {% cvgraph_node_unlink "button" node "projects" project %}
+        {% cvgraph_node_unlink "editor" node "projects" project %}
+      {% endif %}
+    </div>
+  {% endfor %}
+{% endwith %}

@@ -123,6 +123,16 @@ def register_create_link_unlink(node_class, other_node_class, rel_name):
         generic_unlink_related(node_class, other_node_class, rel_name, request, labels, params, node_id)
 
 
+def register_link_unlink(node_class, other_node_class, rel_name):
+    node_labels = label_string(node_class.inherited_labels())
+    @command(node_labels, 'link', rel_name)
+    def link(request, labels, params, node_id):
+        generic_link_related(node_class, other_node_class, rel_name, request, labels, params, node_id)
+    @command(node_labels, 'unlink', rel_name)
+    def unlink(request, labels, params, node_id):
+        generic_unlink_related(node_class, other_node_class, rel_name, request, labels, params, node_id)
+
+
 def register_create_related(node_class, other_node_class, rel_name):
     node_labels = label_string(node_class.inherited_labels())
     @command(node_labels, 'create', rel_name)
@@ -171,6 +181,8 @@ register_delete_update(CV)
 register_delete_update(Experience)
 register_create_notes(Experience)
 register_create_links(Experience)
+register_link_unlink(Experience, Project, 'projects')
+register_link_unlink(Experience, Role, 'roles')
 
 
 # -- LINK --

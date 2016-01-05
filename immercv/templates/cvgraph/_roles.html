@@ -1,0 +1,25 @@
+{% load cvgraph_tags markdown_deux_tags %}
+
+{% with roles=node.roles %}
+  {% if roles %}
+    <h2>Related roles</h2>
+  {% endif %}
+  {% if user.is_authenticated %}
+    {% cvgraph_node_link_related "button" node "roles" %}
+    {% cvgraph_node_link_related "editor" node "roles" %}
+  {% endif %}
+  {% for role in roles %}
+    <div class="card card-block">
+      <div class="card-text">
+        {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=role.name %}
+        {% if role.description %}
+          <div>{{ role.description|markdown }}</div>
+        {% endif %}
+      </div>
+      {% if user.is_authenticated %}
+        {% cvgraph_node_unlink "button" node "roles" role %}
+        {% cvgraph_node_unlink "editor" node "roles" role %}
+      {% endif %}
+    </div>
+  {% endfor %}
+{% endwith %}
