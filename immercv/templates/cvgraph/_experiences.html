@@ -20,6 +20,8 @@
         {% endif %}
         {% if experience.body %}
           {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:experience_detail' node=experience slugtext=experience.title text="Continue reading..." %}
+        {% else %}
+          {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:experience_detail' node=experience slugtext=experience.title text="More about this experience..." %}
         {% endif %}
       </div>
       {% if user.is_authenticated %}

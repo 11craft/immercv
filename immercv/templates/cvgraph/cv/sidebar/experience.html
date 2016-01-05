@@ -1,5 +1,18 @@
 {% load markdown_deux_tags %}
 
-<h3>{{ node.title }}</h3>
-
-{{ node.summary|markdown }}
+<div class="card">
+  <h5 class="card-header">
+    {{ node.title }}
+  </h5>
+  <div class="card-block">
+    <div class="card-text">
+      {{ node.summary|markdown }}
+    </div>
+    <div class="hidden-print">
+      {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:experience_detail' node=node text="Read more" slugtext=node.title class="btn btn-primary" %}
+    </div>
+    <div class="visible-print-block card-text">
+      <small><em>View this CV online to read the full experience.</em></small>
+    </div>
+  </div>
+</div>

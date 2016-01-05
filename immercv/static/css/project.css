@@ -32,3 +32,9 @@ footer.visible-print-block {
   margin-top: 2em;
   font-size: small;
 }
+
+.cv-sidebar {
+  float: right;
+  width: 40%;
+  margin: 1em 1em;
+}
