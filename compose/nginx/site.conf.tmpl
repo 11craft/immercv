@@ -1,3 +1,8 @@
+# Prevent other host names from leaking through.
+server {
+    return       444;
+}
+
 upstream app {
     server django:5000;
 }
