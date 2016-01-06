@@ -248,5 +248,5 @@ ADMIN_URL = r'^admin/'
 # ANALYTICS
 # ---------
 
-PIWIK_SERVER = env('PIWIK_SERVER')
-PIWIK_SITE_ID = env('PIWIK_SITE_ID')
+PIWIK_SERVER = env('PIWIK_SERVER', default=None)
+PIWIK_SITE_ID = env('PIWIK_SITE_ID', default=None)
