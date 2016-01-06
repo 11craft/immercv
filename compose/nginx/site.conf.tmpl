@@ -1,0 +1,22 @@
+upstream app {
+    server django:5000;
+}
+
+server {
+    listen 80;
+    server_name ${DJANGO_ALLOWED_HOSTS};
+    charset utf-8;
+
+    location / {
+        # checks for static file, if not found proxy to app
+        try_files $uri @proxy_to_app;
+    }
+
+    location @proxy_to_app {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+
+        proxy_pass   http://app;
+    }
+}

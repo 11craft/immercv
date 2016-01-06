@@ -1,2 +1,2 @@
-FROM nginx:latest
-ADD nginx.conf /etc/nginx/nginx.conf
+FROM shepmaster/nginx-template-image
+ADD site.conf.tmpl /etc/nginx/sites-templates/site.conf.tmpl

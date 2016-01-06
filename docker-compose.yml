@@ -28,10 +28,13 @@ django:
 
 nginx:
   build: ./compose/nginx
+  volumes:
+    - /data/immercv/nginx/logs:/var/log/nginx
   links:
     - django
   ports:
     - "0.0.0.0:80:80"
+  env_file: .env
 
 redis:
   image: redis:3.0
