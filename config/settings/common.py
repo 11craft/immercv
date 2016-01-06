@@ -250,3 +250,9 @@ ADMIN_URL = r'^admin/'
 
 PIWIK_SERVER = env('PIWIK_SERVER', default=None)
 PIWIK_SITE_ID = env('PIWIK_SITE_ID', default=None)
+
+
+# DISQUS
+# ------
+
+DISQUS_SITE_ID = env('DISQUS_SITE_ID', default=None)

@@ -28,6 +28,8 @@
       {{ experience.body|markdown }}
     {% endif %}
 
+    {% include 'cvgraph/_comments.html' with node=experience %}
+
     {% include 'cvgraph/_projects.html' with node=experience %}
 
     {% include 'cvgraph/_roles.html' with node=experience %}
