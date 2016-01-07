@@ -1,6 +1,8 @@
 {% extends "cvgraph/base.html" %}
 {% load cache cvgraph_tags markdown_deux_tags %}
 
+{% block title %}{{ project.name }}{% endblock %}
+
 {% block content %}
 
   {% cache cache_timeout project user.is_authenticated project|node_id %}

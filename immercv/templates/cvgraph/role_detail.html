@@ -1,6 +1,8 @@
 {% extends "cvgraph/base.html" %}
 {% load cache cvgraph_tags markdown_deux_tags %}
 
+{% block title %}{{ role.name }}{% endblock %}
+
 {% block content %}
 
   {% cache cache_timeout role user.is_authenticated role|node_id %}

@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 {% load cache cvgraph_tags markdown_deux_tags %}
 
+{% block title %}{{ person }}: Experiences, Links, and Notes{% endblock %}
+
 {% block content %}
 
   {% cache cache_timeout posts user.is_authenticated person|node_id %}
 
-    <h1>Experiences, Links, and Notes from {{ person }}</h1>
+    <h1>{{ person }}: Experiences, Links, and Notes</h1>
 
     {% for post in posts %}
       <div class="card">

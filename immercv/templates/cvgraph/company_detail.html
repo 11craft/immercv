@@ -1,6 +1,8 @@
 {% extends "cvgraph/base.html" %}
 {% load cache cvgraph_tags %}
 
+{% block title %}{{ company.name }}{% endblock %}
+
 {% block content %}
 
   {% cache cache_timeout company user.is_authenticated company|node_id %}

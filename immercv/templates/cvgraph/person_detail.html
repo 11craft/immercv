@@ -1,6 +1,8 @@
 {% extends "cvgraph/base.html" %}
 {% load cache cvgraph_tags %}
 
+{% block title %}ImmerCV: {{ person.name }}{% endblock %}
+
 {% block content %}
 
   {% cache cache_timeout person user.is_authenticated person|node_id %}

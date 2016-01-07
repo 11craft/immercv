@@ -1,6 +1,8 @@
 {% extends "cvgraph/base.html" %}
 {% load cache cvgraph_tags markdown_deux_tags %}
 
+{% block title %}{{ experience.title }}{% endblock %}
+
 {% block content %}
 
   {% cache cache_timeout experience user.is_authenticated experience|node_id %}
