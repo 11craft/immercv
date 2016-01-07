@@ -1,3 +1,5 @@
+from django.core.urlresolvers import reverse
+from django.utils.text import slugify
 from neomodel import IntegerProperty, StructuredNode, StringProperty, db, DateProperty, RelationshipFrom, \
     RelationshipTo, StructuredRel, Relationship
 
@@ -104,6 +106,10 @@ class Experience(StructuredNode):
 
     def __str__(self):
         return self.title
+
+    def canonical_url(self):
+        return reverse('cvgraph:experience_detail',
+                       kwargs=dict(id=self._id, slug=slugify(self.title)))
 
 
 class Link(StructuredNode):

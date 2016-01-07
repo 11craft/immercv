@@ -4,7 +4,8 @@
   <div id="disqus_thread"></div>
   <script>
   var disqus_config = function () {
-  this.page.identifier = 'node-{{ node|node_id }}';
+    this.page.url = document.location.protocol + '//' + window.location.host + '{{ node.canonical_url }}';
+    this.page.identifier = 'node-{{ node|node_id }}';
   };
   (function() { // DON'T EDIT BELOW THIS LINE
   var d = document, s = d.createElement('script');
