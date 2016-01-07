@@ -1,18 +1,18 @@
-{% load markdown_deux_tags %}
+{% load cvgraph_tags markdown_deux_tags %}
 
 <div class="card">
   <h5 class="card-header">
     {{ node.title }}
   </h5>
   <div class="card-block">
-    <div class="card-text">
+    <div class="card-text small">
       {{ node.summary|markdown }}
     </div>
     <div class="hidden-print">
-      {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:experience_detail' node=node text="Read more" slugtext=node.title class="btn btn-primary" %}
+      {% include 'cvgraph/_node_detail_link.html' with absolute=True url='cvgraph:experience_detail' node=node text="Read more" slugtext=node.title class="btn btn-primary btn-sm" %}
     </div>
     <div class="visible-print-block card-text">
-      <small><em>View this CV online to read the full experience.</em></small>
+      <small><em><a href="http://{{ request.META.HTTP_HOST }}{% url 'cvgraph:cv_detail' id=cv|node_id slug=cv.name|slugify %}">View this CV online</a> to read more.</em></small>
     </div>
   </div>
 </div>

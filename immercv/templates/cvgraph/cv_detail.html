@@ -19,8 +19,10 @@
     <div class="clearfix"></div>
 
     {% for cv_item in cv_items %}
-      {% include cv_item.template with inner_template=cv_item.inner_template node=cv_item.node text=cv_item.text %}
+      {% include cv_item.template with inner_template=cv_item.inner_template node=cv_item.node text=cv_item.text cv=cv %}
     {% endfor %}
+
+    <div class="clearfix"></div>
 
     <footer>
       Prepared for {{ cv.name }}{% if cv.date %} on {{ cv.date }}{% endif %}.

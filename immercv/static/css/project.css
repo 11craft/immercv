@@ -31,13 +31,6 @@ footer {
   font-size: small;
 }
 
-@media print {
-  footer {
-    position: fixed;
-    bottom: 0;
-  }
-}
-
 .cv-sidebar {
   float: right;
   width: 40%;

@@ -1,5 +1,5 @@
 {% load markdown_deux_tags %}
-{% include 'cvgraph/_node_detail_link.html' with url='cvgraph:experience_detail' node=node text=node.title %}
+{% include 'cvgraph/_node_detail_link.html' with absolute=True url='cvgraph:experience_detail' node=node text=node.title %}
 {% if node.summary %}
   <small class="text-muted">
     {{ node.summary|markdown }}
