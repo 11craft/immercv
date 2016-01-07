@@ -3,6 +3,12 @@
 
 {% block title %}{{ person }}: Experiences, Links, and Notes{% endblock %}
 
+{% block meta %}
+  <link href="{% url 'cvblog:person_posts_feed' id=person|node_id slug=person.name|slugify %}"
+        rel="alternate" type="application/rss+xml"
+        title="{{ person }}: Experiences, Links, and Notes" />
+{% endblock %}
+
 {% block content %}
 
   {% cache cache_timeout posts user.is_authenticated person|node_id %}
