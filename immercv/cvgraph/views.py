@@ -92,7 +92,10 @@ class CvgraphCVDetailView(CvgraphModelDetailView):
         for line in (spec or '').splitlines():
             if line == '':
                 continue
-            template_name, value = line.split(': ', 1)
+            try:
+                template_name, value = line.split(': ', 1)
+            except ValueError:
+                continue
             template = 'cvgraph/cv/{}/container.html'.format(template_name)
             if value.startswith('http://') or value.startswith('https://'):
                 node, node_type = decode_node_url(value)
