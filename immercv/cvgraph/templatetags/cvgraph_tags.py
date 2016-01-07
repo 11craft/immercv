@@ -9,6 +9,11 @@ register = template.Library()
 
 
 @register.filter
+def sort_by(nodes, attr):
+    return sorted(nodes, key=lambda node: getattr(node, attr).lower())
+
+
+@register.filter
 def cvgraph_deep_topics(node):
     query = """
         START n=node({self})
@@ -16,6 +21,7 @@ def cvgraph_deep_topics(node):
         WHERE (n)<-[*0..]-()<-[:RELATED_TO*1..]-(topics)
            OR (n:Person)-->()<-[*0..]-()<-[:RELATED_TO*1..]-(topics)
         RETURN DISTINCT topics
+        ORDER BY LOWER(topics.name)
     """
     params = {'self': node._id}
     results, meta = db.cypher_query(query, params)

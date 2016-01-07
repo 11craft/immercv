@@ -1,2 +1,2 @@
 {% load cvgraph_tags %}
-{% include 'cvgraph/_topics.html' with topics=node.topics %}
+{% include 'cvgraph/_topics.html' with topics=node.topics|sort_by:'name' %}
