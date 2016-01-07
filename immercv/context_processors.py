@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.sites.models import Site
 
 
 def analytics(request):
@@ -17,4 +18,10 @@ def caching(request):
 def disqus(request):
     return {
         'DISQUS_SITE_ID': settings.DISQUS_SITE_ID,
+    }
+
+
+def site(request):
+    return {
+        'site': Site.objects.get_current(),
     }

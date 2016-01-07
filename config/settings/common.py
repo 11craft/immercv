@@ -176,6 +176,7 @@ TEMPLATES = [
                 'immercv.context_processors.analytics',
                 'immercv.context_processors.caching',
                 'immercv.context_processors.disqus',
+                'immercv.context_processors.site',
             ],
         },
     },
