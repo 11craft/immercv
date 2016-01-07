@@ -52,4 +52,4 @@
 (:ThirdPerson) -[:WORKED_FOR {title}]-> (:Company)
 
 (:Topic {name})
-(:Topic) -[:RELATES_TO]-> (*)
+(:Topic) -[:RELATED_TO]-> (*)
