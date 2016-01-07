@@ -1,17 +1,57 @@
 ImmerCV
-==============================
+=======
 
-Immersive CV
+ImmerCV produces tailor-made CVs and résumés.
+With it, you build and navigate a professional biography,
+then select individual elements for each CV.
 
+Print-friendly CVs provide a link back to the website,
+providing the opportunity for an immersive look at past and present work.
+
+In addition to producing CVs, ImmerCV can be a blogging platform.
+It publishes RSS feeds for experiences, notes, and links,
+and every page is search-engine friendly.
 
 LICENSE: BSD
 
+
+IMPORTANT NOTE
+--------------
+
+This is in "release early" stage and as such, this README does not yet
+reflect an ideal state of helping you set up
+
+Please submit Github tickets if you have questions,
+and we'll update docs as needed based on interest and demand.
+
+This project made use of the `cookiecutter-django`_ project template.
+
+..  _cookiecutter-django:
+    http://cookiecutter-django.readthedocs.org/en/latest/
+
+
+Technology used
+---------------
+
+- Python 3.5
+- Django 1.8
+- Neo4j
+- PostgreSQL
+- Docker
+
+
+Examples of ImmerCV in action
+-----------------------------
+
+- `Matthew Scott's ImmerCV <http://cv.11craft.com/>`__
+
 Settings
-------------
+--------
 
-Moved to settings_.
+See also `cookiecutter-django settings`_.
 
-.. _settings: http://cookiecutter-django.readthedocs.org/en/latest/settings.html
+..  _cookiecutter-django settings:
+    http://cookiecutter-django.readthedocs.org/en/latest/settings.html
 
 Basic Commands
 --------------
@@ -19,13 +59,20 @@ Basic Commands
 Setting Up Your Users
 ^^^^^^^^^^^^^^^^^^^^^
 
-To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+The system is built only to support a single "Person" node,
+attached to the superuser account. Account signup via the web
+is disabled.
 
 To create an **superuser account**, use this command::
 
     $ python manage.py createsuperuser
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+Once you log in you'll need to configure your email account.
+
+For convenience, you can keep your superuser logged in on Chrome
+and your anonymous user logged in on Firefox (or similar),
+so that you can see how the site behaves for both kinds of users.
+
 
 Test coverage
 ^^^^^^^^^^^^^
@@ -42,9 +89,6 @@ Live reloading and Sass CSS compilation
 Moved to `Live reloading and SASS compilation`_.
 
 .. _`Live reloading and SASS compilation`: http://cookiecutter-django.readthedocs.org/en/latest/live-reloading-and-sass-compilation.html
-
-
-
 
 
 Email Server
