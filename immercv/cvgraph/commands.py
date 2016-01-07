@@ -183,6 +183,7 @@ register_create_notes(Experience)
 register_create_links(Experience)
 register_link_unlink(Experience, Project, 'projects')
 register_link_unlink(Experience, Role, 'roles')
+register_create_link_unlink(Experience, Topic, 'topics')
 
 
 # -- LINK --
