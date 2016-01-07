@@ -37,6 +37,7 @@ def field_for_node_link(node_class):
         (node._id, str(node))
         for node in node_class.nodes.all()
     ]
+    choices.sort(key=lambda i: i[1].lower())
     return forms.ChoiceField(choices)
 
 
