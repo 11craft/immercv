@@ -17,7 +17,6 @@ class CvblogPersonOfFirstUserView(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         user = User.objects.first()
-        print(user)
         if user is None:
             return reverse('about')
         try:

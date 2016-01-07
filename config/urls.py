@@ -9,6 +9,7 @@ from django.views.generic import TemplateView
 from django.views import defaults as default_views
 
 from immercv.cvblog.views import CvblogPersonOfFirstUserView
+from immercv.cvgraph.views import CvgraphPersonOfFirstUserView
 
 
 urlpatterns = [
@@ -26,6 +27,7 @@ urlpatterns = [
     # Your stuff: custom urls includes go here
     url(r'^$', CvblogPersonOfFirstUserView.as_view(), name="home"),
     url(r'^blog/', include('immercv.cvblog.urls', namespace='cvblog')),
+    url(r'^cv/$', CvgraphPersonOfFirstUserView.as_view(), name="cv"),
     url(r'', include('immercv.cvgraph.urls', namespace='cvgraph')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

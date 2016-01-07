@@ -39,6 +39,24 @@ class CvgraphMeView(RedirectView):
         ))
 
 
+class CvgraphPersonOfFirstUserView(RedirectView):
+
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        user = User.objects.first()
+        if user is None:
+            return reverse('about')
+        try:
+            person = Person.for_user(user)
+        except Person.DoesNotExist:
+            return reverse('about')
+        return reverse('cvgraph:person_detail', kwargs=dict(
+            id=person._id,
+            slug=slugify(person.name),
+        ))
+
+
 class CvgraphModelDetailView(TemplateView):
 
     model = None
