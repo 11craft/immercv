@@ -11,31 +11,18 @@
       {% cvgraph_node_edit_properties "editor" person "name" %}
     {% endif %}
 
-    {% if user.is_authenticated %}
-      <h2>CVs</h2>
-      {% cvgraph_node_create_related "button" person "cvs" "name" %}
-      {% cvgraph_node_create_related "editor" person "cvs" "name" %}
-      <ul>
-        {% for cv in person.cvs %}
-          <li>
-            {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:cv_detail' node=cv text=cv.name %}
-          </li>
-        {% endfor %}
-      </ul>
-    {% endif %}
+    {% include 'cvgraph/_topics_deep.html' with node=person heading_text="Topics" %}
 
     <div class="row">
 
       <div class="col-md-6">
         {% if person.roles or user.is_authenticated %}
+          <h2>Roles</h2>
+          {% if user.is_authenticated %}
+            {% cvgraph_node_create_related "button" person "roles" "name" %}
+            {% cvgraph_node_create_related "editor" person "roles" "name" %}
+          {% endif %}
           <div class="card">
-            <div class="card-block">
-              <h4 class="card-title">Roles</h4>
-              {% if user.is_authenticated %}
-                {% cvgraph_node_create_related "button" person "roles" "name" %}
-                {% cvgraph_node_create_related "editor" person "roles" "name" %}
-              {% endif %}
-            </div>
             {% if person.roles %}
               <ul class="list-group list-group-flush">
                 {% for role in person.roles %}
@@ -65,16 +52,14 @@
 
       <div class="col-md-6">
         {% if person.projects or user.is_authenticated %}
+          <h2>Projects</h2>
+          {% if user.is_authenticated %}
+            {% cvgraph_node_create_related "button" person "projects" "name" %}
+            {% cvgraph_node_create_related "editor" person "projects" "name" %}
+            {% cvgraph_node_link_related "button" person "projects" %}
+            {% cvgraph_node_link_related "editor" person "projects" %}
+          {% endif %}
           <div class="card">
-            <div class="card-block">
-              <h4 class="card-title">Projects</h4>
-              {% if user.is_authenticated %}
-                {% cvgraph_node_create_related "button" person "projects" "name" %}
-                {% cvgraph_node_create_related "editor" person "projects" "name" %}
-                {% cvgraph_node_link_related "button" person "projects" %}
-                {% cvgraph_node_link_related "editor" person "projects" %}
-              {% endif %}
-            </div>
             {% if person.projects %}
               <ul class="list-group list-group-flush">
                 {% for project in person.projects %}
@@ -100,7 +85,18 @@
 
     {% include 'cvgraph/_notes.html' with node=person %}
 
-    {% include 'cvgraph/_topics_deep.html' with node=person heading_text="Topics" %}
+    {% if user.is_authenticated %}
+      <h2>CVs</h2>
+      {% cvgraph_node_create_related "button" person "cvs" "name" %}
+      {% cvgraph_node_create_related "editor" person "cvs" "name" %}
+      <ul>
+        {% for cv in person.cvs %}
+          <li>
+            {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:cv_detail' node=cv text=cv.name %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 
   {% endcache %}
 
