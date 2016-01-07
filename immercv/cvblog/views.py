@@ -98,4 +98,5 @@ def posts_for_person(person):
          for n in person.published_notes()]
     )
     posts.sort(key=date_and_title)
+    posts.reverse()
     return posts
