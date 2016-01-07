@@ -84,7 +84,7 @@ def date_and_title(post):
 def posts_for_person(person):
     # TODO: This is messy... refactor it!
     posts = (
-        [dict(title=e.title, publish_date=e.publish_date, content=e.summary + '\n\n' + (e.body or ''),
+        [dict(title=e.title, publish_date=e.publish_date, content=e.summary,
               url=reverse('cvgraph:experience_detail',
                           kwargs=dict(id=e._id, slug=slugify(e.title))))
          for e in person.published_experiences()]
