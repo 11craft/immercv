@@ -36,3 +36,7 @@ footer {
   width: 40%;
   margin: 1em 1em;
 }
+
+code {
+  white-space: pre;
+}
