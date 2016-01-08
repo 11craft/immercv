@@ -46,7 +46,7 @@
       </tbody>
     </table>
 
-    {% include 'cvgraph/_experiences.html' with node=company %}
+    {% include 'cvgraph/_experiences.html' with node=company experiences=company.experiences %}
 
     {% include 'cvgraph/_links.html' with node=company %}
 

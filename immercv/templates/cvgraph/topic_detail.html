@@ -19,11 +19,15 @@
       {{ topic.description|markdown }}
     {% endif %}
 
-    {% include 'cvgraph/_experiences.html' with node=topic %}
+    {% include 'cvgraph/_experiences.html' with node=topic experiences=topic.all_experiences %}
 
     {% include 'cvgraph/_links.html' with node=topic %}
 
     {% include 'cvgraph/_notes.html' with node=topic %}
+
+    {% include 'cvgraph/_projects.html' with node=topic projects=topic.all_projects %}
+
+    {% include 'cvgraph/_roles.html' with node=topic roles=topic.all_roles %}
 
     {% include 'cvgraph/_topics_shallow.html' with node=topic %}
 

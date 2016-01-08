@@ -99,7 +99,7 @@
       </div>
     {% endif %}
 
-    {% include 'cvgraph/_experiences.html' with node=role %}
+    {% include 'cvgraph/_experiences.html' with node=role experiences=role.experiences %}
 
     {% include 'cvgraph/_links.html' with node=role %}
 

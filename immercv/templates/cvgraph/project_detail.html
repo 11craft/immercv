@@ -51,7 +51,7 @@
       {% cvgraph_node_link_related "editor" project "roles" %}
     {% endif %}
 
-    {% include 'cvgraph/_experiences.html' with node=project %}
+    {% include 'cvgraph/_experiences.html' with node=project experiences=project.experiences %}
 
     {% include 'cvgraph/_links.html' with node=project %}
 

@@ -32,9 +32,9 @@
 
     {% include 'cvgraph/_comments.html' with node=experience %}
 
-    {% include 'cvgraph/_projects.html' with node=experience %}
+    {% include 'cvgraph/_projects.html' with node=experience projects=experience.projects %}
 
-    {% include 'cvgraph/_roles.html' with node=experience %}
+    {% include 'cvgraph/_roles.html' with node=experience roles=experience.roles %}
 
     {% include 'cvgraph/_links.html' with node=experience %}
 

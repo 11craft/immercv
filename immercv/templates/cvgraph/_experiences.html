@@ -1,35 +1,33 @@
 {% load cvgraph_tags markdown_deux_tags %}
 
-{% with experiences=node.experiences %}
-  {% if experiences %}
-    <h2>Experiences</h2>
-  {% endif %}
-  {% if user.is_authenticated %}
-    {% cvgraph_node_create_related "button" node "experiences" %}
-    {% cvgraph_node_create_related "editor" node "experiences" %}
-  {% endif %}
-  {% for experience in experiences %}
-    <div class="card card-block">
-      <div class="card-text">
-        <h3>{{ experience.title }}</h3>
-        {% if experience.date %}
-          <p class="card-text text-muted">{{ experience.date }}</p>
-        {% endif %}
-        {% if experience.summary %}
-          <div>{{ experience.summary|markdown }}</div>
-        {% endif %}
-        {% if experience.body %}
-          {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:experience_detail' node=experience slugtext=experience.title text="Continue reading..." %}
-        {% else %}
-          {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:experience_detail' node=experience slugtext=experience.title text="More about this experience..." %}
-        {% endif %}
-      </div>
-      {% if user.is_authenticated %}
-        {% cvgraph_node_edit_properties "button" experience %}
-        {% cvgraph_node_edit_properties "editor" experience %}
-        {% cvgraph_node_delete "button" experience %}
-        {% cvgraph_node_delete "editor" experience %}
+{% if experiences %}
+  <h2>Experiences</h2>
+{% endif %}
+{% if user.is_authenticated %}
+  {% cvgraph_node_create_related "button" node "experiences" %}
+  {% cvgraph_node_create_related "editor" node "experiences" %}
+{% endif %}
+{% for experience in experiences %}
+  <div class="card card-block">
+    <div class="card-text">
+      <h3>{{ experience.title }}</h3>
+      {% if experience.date %}
+        <p class="card-text text-muted">{{ experience.date }}</p>
+      {% endif %}
+      {% if experience.summary %}
+        <div>{{ experience.summary|markdown }}</div>
+      {% endif %}
+      {% if experience.body %}
+        {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:experience_detail' node=experience slugtext=experience.title text="Continue reading..." %}
+      {% else %}
+        {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:experience_detail' node=experience slugtext=experience.title text="More about this experience..." %}
       {% endif %}
     </div>
-  {% endfor %}
-{% endwith %}
+    {% if user.is_authenticated %}
+      {% cvgraph_node_edit_properties "button" experience %}
+      {% cvgraph_node_edit_properties "editor" experience %}
+      {% cvgraph_node_delete "button" experience %}
+      {% cvgraph_node_delete "editor" experience %}
+    {% endif %}
+  </div>
+{% endfor %}

@@ -250,7 +250,57 @@ class Topic(StructuredNode):
     experiences = RelationshipFrom('Experience', 'WITH')
     links = RelationshipFrom('Link', 'ABOUT')
     notes = RelationshipFrom('Note', 'ABOUT')
+    projects = RelationshipTo('Project', 'RELATED_TO')
+    roles = RelationshipTo('Role', 'RELATED_TO')
     topics = Relationship('Topic', 'RELATED_TO')
 
     def __str__(self):
         return self.name
+
+    def all_experiences(self):
+        # There is a quirk in that a topic could be related to an experience,
+        # or an experience could be with a topic. We want to find all such
+        # experiences.
+        results = db.cypher_query(
+            """
+            MATCH (e:Experience), (t:Topic)
+            WHERE ID(t) = {id}
+              AND ((e)-[:WITH]->(t) OR (t)-[:RELATED_TO*1..]->(e))
+            RETURN e
+            """,
+            dict(id=self._id)
+        )
+        return [
+            Experience.inflate(result['e'])
+            for result in results[0]
+        ]
+
+    def all_projects(self):
+        results = db.cypher_query(
+            """
+            MATCH (p:Project), (t:Topic)
+            WHERE ID(t) = {id}
+              AND (t)-[:RELATED_TO*1..]->(p)
+            RETURN p
+            """,
+            dict(id=self._id)
+        )
+        return [
+            Project.inflate(result['p'])
+            for result in results[0]
+        ]
+
+    def all_roles(self):
+        results = db.cypher_query(
+            """
+            MATCH (r:Role), (t:Topic)
+            WHERE ID(t) = {id}
+              AND (t)-[:RELATED_TO*1..]->(r)
+            RETURN r
+            """,
+            dict(id=self._id)
+        )
+        return [
+            Role.inflate(result['r'])
+            for result in results[0]
+        ]
