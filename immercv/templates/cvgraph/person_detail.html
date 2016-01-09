@@ -9,6 +9,12 @@
 
   {% cache cache_timeout person user.is_authenticated person|node_id %}
 
+    {% if person.image_url %}
+      <div class="person-image">
+        <img src="{{ person.image_url }}" alt="Image of {{ person.name }}">
+      </div>
+    {% endif %}
+
     <h1>{{ person.name }}</h1>
     {% if user.is_authenticated %}
       {% cvgraph_node_edit_properties "button" person %}

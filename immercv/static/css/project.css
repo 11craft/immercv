@@ -43,13 +43,14 @@ code {
 
 .person-detail #content {
   margin-left: 10em;
+  margin-top: 1em;
 }
 
 .person-detail .role {
   margin-top: 1em;
 }
 
-.person-detail .role-date {
+.person-detail .role-date, .person-detail .person-image {
   float: left;
   display: block;
   width: 9em;

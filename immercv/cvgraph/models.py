@@ -14,7 +14,7 @@ EDITABLE_PROPERTIES = {
     ':Experience': ['title', 'date', 'publish_date', 'summary', 'body'],
     ':Link': ['title', 'url', 'publish_date', 'summary'],
     ':Note': ['text', 'publish_date'],
-    ':Person': ['name', 'contact_info'],
+    ':Person': ['name', 'contact_info', 'image_url'],
     ':Project': ['name', 'description'],
     ':Role': ['name', 'description'],
     ':Topic': ['name', 'description'],
@@ -143,6 +143,7 @@ class Person(StructuredNode):
     django_id = IntegerProperty(unique_index=True, required=True)
     name = StringProperty(required=True)
     contact_info = StringProperty()
+    image_url = StringProperty()
 
     cvs = RelationshipTo('CV', 'PREPARED')
     links = RelationshipFrom('Link', 'ABOUT')

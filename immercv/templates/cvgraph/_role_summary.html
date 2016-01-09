@@ -18,7 +18,7 @@
   {% endif %}
   <br>
   {% for topic in role|cvgraph_deep_topics %}
-    <span class="label label-pill label-primary">
+    <span class="label label-info">
       {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:topic_detail' node=topic text=topic.name %}
     </span>
   {% endfor %}
