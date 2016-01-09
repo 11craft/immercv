@@ -42,20 +42,11 @@ code {
 }
 
 .person-detail #content {
-  margin-left: 10em;
   margin-top: 1em;
 }
 
 .person-detail .role {
   margin-top: 1em;
-}
-
-.person-detail .role-date, .person-detail .person-image {
-  float: left;
-  display: block;
-  width: 9em;
-  margin-left: -10em;
-  text-align: right;
 }
 
 .person-detail h2 {
@@ -64,4 +55,18 @@ code {
 
 .label a {
   color: white;
+}
+
+@media (min-width: 48em) {
+  .person-detail #content {
+    margin-left: 10em;
+  }
+
+  .person-detail .role-date, .person-detail .person-image {
+    float: left;
+    display: block;
+    width: 9em;
+    margin-left: -10em;
+    text-align: right;
+  }
 }

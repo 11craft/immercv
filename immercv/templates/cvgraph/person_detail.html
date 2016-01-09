@@ -33,13 +33,13 @@
     {% endif %}
 
     {% for role, start_date in person.active_roles_and_start_dates %}
-      {% include 'cvgraph/_role_summary.html' with end_date=None %}
+      {% include 'cvgraph/_role_summary.html' %}
     {% endfor %}
 
     <h2>Prior Roles</h2>
 
     {% for role, start_date, end_date in person.prior_roles_and_dates %}
-      {% include 'cvgraph/_role_summary.html' with end_date=None %}
+      {% include 'cvgraph/_role_summary.html' %}
     {% endfor %}
 
     {% include 'cvgraph/_links.html' with node=person %}
