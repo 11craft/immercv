@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 from django.views import defaults as default_views
 
 from immercv.cvblog.views import CvblogPersonOfFirstUserView
@@ -25,7 +25,8 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
     # Your stuff: custom urls includes go here
-    url(r'^$', CvblogPersonOfFirstUserView.as_view(), name="home"),
+    url(r'^$', RedirectView.as_view(url='/person/first/'), name="home"),
+    url(r'^blog/first/$', CvblogPersonOfFirstUserView.as_view(), name="blog"),
     url(r'^blog/', include('immercv.cvblog.urls', namespace='cvblog')),
     url(r'^person/first/$', CvgraphPersonOfFirstUserView.as_view(), name="cv"),
     url(r'', include('immercv.cvgraph.urls', namespace='cvgraph')),
