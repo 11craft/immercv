@@ -258,3 +258,18 @@ PIWIK_SITE_ID = env('PIWIK_SITE_ID', default=None)
 # ------
 
 DISQUS_SITE_ID = env('DISQUS_SITE_ID', default=None)
+
+
+# MARKDOWN
+# --------
+
+MARKDOWN_DEUX_STYLES = {
+    "default": {
+        "extras": {
+            "code-friendly": None,
+        },
+        # Allow raw HTML (WARNING: don't use this for user-generated
+        # Markdown for your site!).
+        "safe_mode": False,
+    }
+}

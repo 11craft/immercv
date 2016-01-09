@@ -19,6 +19,7 @@ def cvgraph_deep_topics(node):
         START n=node({self})
         MATCH (topics:Topic)
         WHERE (n)<-[*0..]-()<-[:RELATED_TO*1..]-(topics)
+           OR (n:Role)-->()<-[*0..]-()<-[:RELATED_TO*1..]-(topics)
            OR (n:Person)-->()<-[*0..]-()<-[:RELATED_TO*1..]-(topics)
         RETURN DISTINCT topics
         ORDER BY LOWER(topics.name)

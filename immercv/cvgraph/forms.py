@@ -2,7 +2,7 @@ from django import forms
 from neomodel import DateProperty, IntegerProperty, StringProperty
 
 from immercv.cvgraph.models import Note, Project, Role, Topic, Experience, \
-    Link, CV
+    Link, CV, Person
 
 PROPERTY_TYPE_FIELDS = {
     # property-type: form-field-type,
@@ -19,6 +19,7 @@ NODE_CLASS_FIELD_WIDGETS = {
     Experience.summary: forms.Textarea,
     Link.summary: forms.Textarea,
     Note.text: forms.Textarea,
+    Person.contact_info: forms.Textarea,
     Project.description: forms.Textarea,
     Role.description: forms.Textarea,
     Topic.description: forms.Textarea,

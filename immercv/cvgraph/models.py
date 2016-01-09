@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 from neomodel import IntegerProperty, StructuredNode, StringProperty, db, DateProperty, RelationshipFrom, \
@@ -12,7 +14,7 @@ EDITABLE_PROPERTIES = {
     ':Experience': ['title', 'date', 'publish_date', 'summary', 'body'],
     ':Link': ['title', 'url', 'publish_date', 'summary'],
     ':Note': ['text', 'publish_date'],
-    ':Person': ['name'],
+    ':Person': ['name', 'contact_info'],
     ':Project': ['name', 'description'],
     ':Role': ['name', 'description'],
     ':Topic': ['name', 'description'],
@@ -36,6 +38,10 @@ def get_node_by_id(cls, id):
 
 def label_string(labels):
     return ''.join(':' + label for label in labels)
+
+
+def parse8601(date_str):
+    return datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
 
 
 def editable_params(params, label):
@@ -136,6 +142,7 @@ class Person(StructuredNode):
 
     django_id = IntegerProperty(unique_index=True, required=True)
     name = StringProperty(required=True)
+    contact_info = StringProperty()
 
     cvs = RelationshipTo('CV', 'PREPARED')
     links = RelationshipFrom('Link', 'ABOUT')
@@ -160,6 +167,55 @@ class Person(StructuredNode):
             django_id=user.id,
             name=user.name if len(user.name) > 0 else user.username,
         ).save()
+
+    def active_roles_and_start_dates(self):
+        results = db.cypher_query(
+            """
+            MATCH
+                (person:Person)-[rel:PERFORMED]->(role:Role)
+            WHERE
+                id(person) = {id}
+                AND rel.start_date IS NOT NULL
+                AND rel.end_date IS NULL
+            RETURN
+                role,
+                rel.start_date as start_date
+            ORDER BY
+                rel.start_date DESC
+            """,
+            dict(id=self._id)
+        )
+        return [
+            (Role.inflate(result['role']), parse8601(result['start_date']))
+            for result in results[0]
+        ]
+
+    def prior_roles_and_dates(self):
+        results = db.cypher_query(
+            """
+            MATCH
+                (person:Person)-[rel:PERFORMED]->(role:Role)
+            WHERE
+                id(person) = {id}
+                AND rel.start_date IS NOT NULL
+                AND rel.end_date IS NOT NULL
+            RETURN
+                role,
+                rel.start_date as start_date,
+                rel.end_date as end_date
+            ORDER BY
+                rel.end_date DESC
+            """,
+            dict(id=self._id)
+        )
+        return [
+            (
+                Role.inflate(result['role']),
+                parse8601(result['start_date']),
+                parse8601(result['end_date']),
+            )
+            for result in results[0]
+        ]
 
     def published_experiences(self):
         results = db.cypher_query(

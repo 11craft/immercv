@@ -1,0 +1,38 @@
+{% load cvgraph_tags %}
+
+<div class="role">
+  <div class="role-date">
+    {% if end_date != None %}
+      <small class="text-muted">{{ start_date.year }}-{{ end_date.year }}</small>
+    {% else %}
+      <small class="text-muted">{{ start_date.year }}-now</small>
+    {% endif %}
+  </div>
+  {% with company=role.companies.single.0 %}
+    <strong>{% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=role.name %}</strong>,
+    {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:company_detail' node=company text=company.name %}
+  {% endwith %}
+  {% if user.is_authenticated %}
+    {% cvgraph_node_delete "button" role %}
+    {% cvgraph_node_delete "editor" role %}
+  {% endif %}
+  <br>
+  {% for topic in role|cvgraph_deep_topics %}
+    <span class="label label-pill label-primary">
+      {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:topic_detail' node=topic text=topic.name %}
+    </span>
+  {% endfor %}
+  {% with projects=role.projects %}
+    {% if projects %}
+      <ul>
+        {% for project in projects %}
+          <li>
+            <small>
+              {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=project text=project.name %}
+            </small>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+</div>

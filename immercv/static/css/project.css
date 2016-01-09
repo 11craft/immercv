@@ -40,3 +40,27 @@ footer {
 code {
   white-space: pre;
 }
+
+.person-detail #content {
+  margin-left: 10em;
+}
+
+.person-detail .role {
+  margin-top: 1em;
+}
+
+.person-detail .role-date {
+  float: left;
+  display: block;
+  width: 9em;
+  margin-left: -10em;
+  text-align: right;
+}
+
+.person-detail h2 {
+  margin-top: 1em;
+}
+
+.label a {
+  color: white;
+}

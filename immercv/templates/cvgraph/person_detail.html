@@ -1,7 +1,9 @@
 {% extends "cvgraph/base.html" %}
-{% load cache cvgraph_tags %}
+{% load cache cvgraph_tags markdown_deux_tags %}
 
 {% block title %}ImmerCV: {{ person.name }}{% endblock %}
+
+{% block body_class %}person-detail{% endblock %}
 
 {% block content %}
 
@@ -9,79 +11,30 @@
 
     <h1>{{ person.name }}</h1>
     {% if user.is_authenticated %}
-      {% cvgraph_node_edit_properties "button" person "name" %}
-      {% cvgraph_node_edit_properties "editor" person "name" %}
+      {% cvgraph_node_edit_properties "button" person %}
+      {% cvgraph_node_edit_properties "editor" person %}
     {% endif %}
 
-    {% include 'cvgraph/_topics_deep.html' with node=person heading_text="Topics" %}
+    {% if person.contact_info %}
+      {{ person.contact_info|markdown }}
+    {% endif %}
 
-    <div class="row">
+    <h2>Current Roles</h2>
 
-      <div class="col-md-6">
-        {% if person.roles or user.is_authenticated %}
-          <h2>Roles</h2>
-          {% if user.is_authenticated %}
-            {% cvgraph_node_create_related "button" person "roles" "name" %}
-            {% cvgraph_node_create_related "editor" person "roles" "name" %}
-          {% endif %}
-          <div class="card">
-            {% if person.roles %}
-              <ul class="list-group list-group-flush">
-                {% for role in person.roles %}
-                  <li class="list-group-item">
-                    {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=role.name %}
-                    {% if role.companies %}
-                      {% with company=role.companies.single.0 %}
-                        <br>
-                        <small>
-                          {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:role_detail' node=role text=company.name slugtext=role.name %}
-                        </small>
-                      {% endwith %}
-                    {% endif %}
-                    {% if user.is_authenticated %}
-                      {% cvgraph_node_edit_properties "button" role %}
-                      {% cvgraph_node_edit_properties "editor" role %}
-                      {% cvgraph_node_delete "button" role %}
-                      {% cvgraph_node_delete "editor" role %}
-                    {% endif %}
-                  </li>
-                {% endfor %}
-              </ul>
-            {% endif %}
-          </div>
-        {% endif %}
-      </div>
+    {% if user.is_authenticated %}
+      {% cvgraph_node_create_related "button" person "roles" "name" %}
+      {% cvgraph_node_create_related "editor" person "roles" "name" %}
+    {% endif %}
 
-      <div class="col-md-6">
-        {% if person.projects or user.is_authenticated %}
-          <h2>Projects</h2>
-          {% if user.is_authenticated %}
-            {% cvgraph_node_create_related "button" person "projects" "name" %}
-            {% cvgraph_node_create_related "editor" person "projects" "name" %}
-            {% cvgraph_node_link_related "button" person "projects" %}
-            {% cvgraph_node_link_related "editor" person "projects" %}
-          {% endif %}
-          <div class="card">
-            {% if person.projects %}
-              <ul class="list-group list-group-flush">
-                {% for project in person.projects %}
-                  <li class="list-group-item">
-                    {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:project_detail' node=project text=project.name %}
-                    {% if user.is_authenticated %}
-                      {% cvgraph_node_edit_properties "button" project "name" %}
-                      {% cvgraph_node_edit_properties "editor" project "name" %}
-                      {% cvgraph_node_delete "button" project %}
-                      {% cvgraph_node_delete "editor" project %}
-                    {% endif %}
-                  </li>
-                {% endfor %}
-              </ul>
-            {% endif %}
-          </div>
-        {% endif %}
-      </div>
+    {% for role, start_date in person.active_roles_and_start_dates %}
+      {% include 'cvgraph/_role_summary.html' with end_date=None %}
+    {% endfor %}
 
-    </div>
+    <h2>Prior Roles</h2>
+
+    {% for role, start_date, end_date in person.prior_roles_and_dates %}
+      {% include 'cvgraph/_role_summary.html' with end_date=None %}
+    {% endfor %}
 
     {% include 'cvgraph/_links.html' with node=person %}
 
