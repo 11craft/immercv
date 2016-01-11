@@ -3,7 +3,7 @@ import datetime
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 from neomodel import IntegerProperty, StructuredNode, StringProperty, db, DateProperty, RelationshipFrom, \
-    RelationshipTo, StructuredRel, Relationship
+    RelationshipTo, StructuredRel, Relationship, BooleanProperty
 
 EDITABLE_PROPERTIES = {
     # labels: {property-name, ...},
@@ -16,7 +16,7 @@ EDITABLE_PROPERTIES = {
     ':Note': ['text', 'publish_date'],
     ':Person': ['name', 'contact_info', 'image_url'],
     ':Project': ['name', 'description'],
-    ':Role': ['name', 'description'],
+    ':Role': ['name', 'description', 'hidden'],
     ':Topic': ['name', 'description'],
 
     # Relationships
@@ -281,6 +281,7 @@ class Role(StructuredNode):
 
     name = StringProperty(required=True)
     description = StringProperty()
+    hidden = BooleanProperty()
 
     companies = RelationshipTo('Company', 'WITH')
     experiences = RelationshipFrom('Experience', 'WITH')

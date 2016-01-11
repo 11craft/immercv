@@ -1,11 +1,13 @@
 from django import forms
-from neomodel import DateProperty, IntegerProperty, StringProperty
+from neomodel import DateProperty, IntegerProperty, StringProperty, \
+    BooleanProperty
 
 from immercv.cvgraph.models import Note, Project, Role, Topic, Experience, \
     Link, CV, Person
 
 PROPERTY_TYPE_FIELDS = {
     # property-type: form-field-type,
+    BooleanProperty: forms.BooleanField,
     DateProperty: forms.DateField,
     IntegerProperty: forms.IntegerField,
     StringProperty: forms.CharField,

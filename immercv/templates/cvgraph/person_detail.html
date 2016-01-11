@@ -39,7 +39,9 @@
     <h2>Prior Roles</h2>
 
     {% for role, start_date, end_date in person.prior_roles_and_dates %}
-      {% include 'cvgraph/_role_summary.html' %}
+      {% if not role.hidden %}
+        {% include 'cvgraph/_role_summary.html' %}
+      {% endif %}
     {% endfor %}
 
     {% include 'cvgraph/_links.html' with node=person %}
