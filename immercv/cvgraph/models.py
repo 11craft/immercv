@@ -169,51 +169,27 @@ class Person(StructuredNode):
             name=user.name if len(user.name) > 0 else user.username,
         ).save()
 
-    def active_roles_and_start_dates(self):
+    def all_roles_and_dates(self):
         results = db.cypher_query(
             """
             MATCH
                 (person:Person)-[rel:PERFORMED]->(role:Role)
             WHERE
                 id(person) = {id}
-                AND rel.start_date IS NOT NULL
-                AND rel.end_date IS NULL
-            RETURN
-                role,
-                rel.start_date as start_date
-            ORDER BY
-                rel.start_date DESC
-            """,
-            dict(id=self._id)
-        )
-        return [
-            (Role.inflate(result['role']), parse8601(result['start_date']))
-            for result in results[0]
-        ]
-
-    def prior_roles_and_dates(self):
-        results = db.cypher_query(
-            """
-            MATCH
-                (person:Person)-[rel:PERFORMED]->(role:Role)
-            WHERE
-                id(person) = {id}
-                AND rel.start_date IS NOT NULL
-                AND rel.end_date IS NOT NULL
             RETURN
                 role,
                 rel.start_date as start_date,
                 rel.end_date as end_date
             ORDER BY
-                rel.end_date DESC
+                rel.start_date DESC, rel.end_date DESC
             """,
             dict(id=self._id)
         )
         return [
             (
                 Role.inflate(result['role']),
-                parse8601(result['start_date']),
-                parse8601(result['end_date']),
+                parse8601(result['start_date']) if result['start_date'] else datetime.date.today(),
+                parse8601(result['end_date']) if result['end_date'] else datetime.date.today(),
             )
             for result in results[0]
         ]

@@ -25,20 +25,14 @@
       {{ person.contact_info|markdown }}
     {% endif %}
 
-    <h2>Current Roles</h2>
+    <h2>Positions Held</h2>
 
     {% if user.is_authenticated %}
       {% cvgraph_node_create_related "button" person "roles" "name" %}
       {% cvgraph_node_create_related "editor" person "roles" "name" %}
     {% endif %}
 
-    {% for role, start_date in person.active_roles_and_start_dates %}
-      {% include 'cvgraph/_role_summary.html' %}
-    {% endfor %}
-
-    <h2>Prior Roles</h2>
-
-    {% for role, start_date, end_date in person.prior_roles_and_dates %}
+    {% for role, start_date, end_date in person.all_roles_and_dates %}
       {% if not role.hidden %}
         {% include 'cvgraph/_role_summary.html' %}
       {% endif %}
