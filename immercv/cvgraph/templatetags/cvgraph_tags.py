@@ -9,11 +9,6 @@ register = template.Library()
 
 
 @register.filter
-def sort_by(nodes, attr):
-    return sorted(nodes, key=lambda node: getattr(node, attr).lower())
-
-
-@register.filter
 def cvgraph_deep_topics(node):
     query = """
         START n=node({self})
@@ -37,6 +32,11 @@ def node_id(node):
 @register.filter
 def relationship(relationship_manager, other):
     return relationship_manager.relationship(other)
+
+
+@register.filter
+def sort_by(nodes, attr):
+    return sorted(nodes, key=lambda node: getattr(node, attr).lower())
 
 
 @register.inclusion_tag('cvgraph/tags/cvgraph_node_create_related.html')
