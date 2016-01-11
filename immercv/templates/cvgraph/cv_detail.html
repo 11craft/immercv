@@ -3,11 +3,11 @@
 
 {% block title %}{{ cv.people.single.0.name }} (prepared for {{ cv.name }}){% endblock %}
 
+{% block body_class %}cv-detail{% endblock %}
+
 {% block content %}
 
   {% cache cache_timeout cv user.is_authenticated cv|node_id %}
-
-    <h1>{{ cv.people.single.0.name }}</h1>
 
     {% if user.is_authenticated %}
       <div class="hidden-print">
@@ -17,6 +17,18 @@
         {% cvgraph_node_delete "editor" cv %}
       </div>
     {% endif %}
+
+    {% with person=cv.people.single.0  %}
+      {% if person.image_url %}
+        <div class="person-image">
+          <img src="{{ person.image_url }}" alt="Image of {{ person.name }}">
+        </div>
+      {% endif %}
+      <h1>{{ person.name }}</h1>
+      {% if person.contact_info %}
+        {{ person.contact_info|markdown }}
+      {% endif %}
+    {% endwith %}
 
     <div class="clearfix"></div>
 

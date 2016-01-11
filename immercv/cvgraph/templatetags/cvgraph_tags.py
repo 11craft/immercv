@@ -1,9 +1,11 @@
+import datetime
 from django import template
 from neomodel import db
 
 from immercv.cvgraph.forms import form_for_node_properties, \
     form_for_node_link
-from immercv.cvgraph.models import label_string, EDITABLE_PROPERTIES, Topic
+from immercv.cvgraph.models import label_string, EDITABLE_PROPERTIES, Topic, \
+    Project
 
 register = template.Library()
 
@@ -27,6 +29,36 @@ def cvgraph_deep_topics(node):
 @register.filter
 def node_id(node):
     return node._id
+
+
+@register.filter
+def person_relationship_dates(node):
+    """Find the nearest start/end dates related to a node's person."""
+    person = node.people.single()
+    rel = node.people.relationship(person)
+    if rel.start_date is not None:
+        return {'start_date': rel.start_date, 'end_date': rel.end_date}
+    elif rel.start_date is None:
+        # Look at all roles associated with the project,
+        # and determine the date range based on those roles.
+        if isinstance(node, Project):
+            start_dates = []
+            end_dates = []
+            for role in node.roles:
+                rel = role.people.relationship(person)
+                if rel.start_date is not None:
+                    start_dates.append(rel.start_date)
+                if rel.end_date is not None:
+                    end_dates.append(rel.end_date)
+            dates = {
+                'start_date': min(start_dates) if start_dates else None,
+                'end_date': max(end_dates) if end_dates else None,
+            }
+            if start_dates and not end_dates:
+                dates['end_date'] = datetime.date.today()
+            return dates
+    else:
+        return {'start_date': None, 'end_date': None}
 
 
 @register.filter

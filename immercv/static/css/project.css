@@ -41,11 +41,11 @@ code {
   white-space: pre;
 }
 
-.person-detail #content {
+.person-detail #content, .cv-detail #content {
   margin-top: 1em;
 }
 
-.person-detail .role {
+.person-detail .role, .cv-detail .role {
   margin-top: 1em;
 }
 
@@ -58,11 +58,11 @@ code {
 }
 
 @media (min-width: 48em) {
-  .person-detail #content {
+  .person-detail #content, .cv-detail #content {
     margin-left: 10em;
   }
 
-  .person-detail .role-date, .person-detail .person-image {
+  .person-detail .role-date, .person-detail .person-image, .cv-detail .role-date, .cv-detail .person-image {
     float: left;
     display: block;
     width: 9em;
@@ -72,11 +72,11 @@ code {
 }
 
 @media only print {
-  .person-detail #content {
+  .person-detail #content, .cv-detail #content {
     margin-left: 10em;
   }
 
-  .person-detail .role-date, .person-detail .person-image {
+  .person-detail .role-date, .person-detail .person-image, .cv-detail .role-date, .cv-detail .person-image {
     float: left;
     display: block;
     width: 9em;

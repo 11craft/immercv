@@ -1,0 +1,27 @@
+{% load markdown_deux_tags cvgraph_tags %}
+
+{% with dates=node|person_relationship_dates %}
+  <div class="role">
+    <div class="role-date">
+      {% if dates.end_date != None %}
+        <small class="text-muted">{{ dates.start_date.year }}-{{ dates.end_date.year }}</small>
+      {% else %}
+        <small class="text-muted">{{ dates.start_date.year }}-now</small>
+      {% endif %}
+    </div>
+    <strong>{% include 'cvgraph/_node_detail_link.html' with absolute=True url='cvgraph:project_detail' node=node text=node.name %}</strong>
+    {% with topics=node|cvgraph_deep_topics %}
+      {% if topics %}
+        <br>
+        {% for topic in topics %}
+          <span class="label label-primary">
+            {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:topic_detail' node=topic text=topic.name %}
+          </span>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% if node.description %}
+      {{ node.description|markdown }}
+    {% endif %}
+  </div>
+{% endwith %}
