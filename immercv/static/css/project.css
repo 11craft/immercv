@@ -70,3 +70,17 @@ code {
     text-align: right;
   }
 }
+
+@media only print {
+  .person-detail #content {
+    margin-left: 10em;
+  }
+
+  .person-detail .role-date, .person-detail .person-image {
+    float: left;
+    display: block;
+    width: 9em;
+    margin-left: -10em;
+    text-align: right;
+  }
+}
