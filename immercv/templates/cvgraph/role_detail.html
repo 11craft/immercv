@@ -91,6 +91,8 @@
                   {% cvgraph_node_edit_properties "editor" project "name" %}
                   {% cvgraph_node_delete "button" project %}
                   {% cvgraph_node_delete "editor" project %}
+                  {% cvgraph_node_unlink "button" project "roles" role %}
+                  {% cvgraph_node_unlink "editor" project "roles" role %}
                 {% endif %}
               </li>
             {% endfor %}
