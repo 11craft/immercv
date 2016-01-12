@@ -32,6 +32,12 @@ def node_id(node):
 
 
 @register.filter
+def or_today(date):
+    """Return `date` if not `None`, else return today's date."""
+    return date if date is not None else datetime.date.today()
+
+
+@register.filter
 def person_relationship_dates(node):
     """Find the nearest start/end dates related to a node's person."""
     person = node.people.single()
