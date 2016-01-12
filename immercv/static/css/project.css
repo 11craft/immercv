@@ -83,4 +83,9 @@ code {
     margin-left: -10em;
     text-align: right;
   }
+
+}
+
+.person-detail .role, .cv-detail .role {
+  page-break-inside: avoid;
 }
