@@ -44,3 +44,7 @@ neomodel==2.0.2
 # Markdown
 django-markdown-deux==1.0.5
 markdown2==2.3.0
+
+# Static site generator
+-e git+https://github.com/11craft/django-freeze@9530ef3#egg=django-freeze
+html5lib==0.999999999

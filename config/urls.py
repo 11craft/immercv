@@ -10,10 +10,17 @@ from django.views import defaults as default_views
 
 from immercv.cvblog.views import CvblogPersonOfFirstUserView
 from immercv.cvgraph.views import CvgraphPersonOfFirstUserView
+from immercv.cvgraph.sitemaps import CvsSitemap
+
+
+sitemaps = {
+    'cvs': CvsSitemap(),
+}
 
 
 urlpatterns = [
     url(r'^robots.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain'), name='robots-txt'),
+    url(r'^sitemap.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
 
     url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name="about"),
 

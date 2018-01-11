@@ -12,7 +12,7 @@
       {% if topics %}
         <br>
         {% for topic in topics %}
-          <span class="label label-primary">
+          <span class="tag tag-primary">
             {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:topic_detail' node=topic text=topic.name %}
           </span>
         {% endfor %}

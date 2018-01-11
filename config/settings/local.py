@@ -59,3 +59,9 @@ INSTALLED_APPS += ('django_extensions', )
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # Your local stuff: Below this line define 3rd party library settings
+
+# FREEZE
+# ------------------------------------------------------------------------------
+FREEZE_SITE_URL = 'http://docker.dev:8000'
+FREEZE_STATIC_ROOT = STATICFILES_DIRS[0]
+FREEZE_INCLUDE_STATIC = True

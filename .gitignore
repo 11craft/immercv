@@ -64,3 +64,6 @@ tests/.hitch
 
 # MailHog binary
 mailhog
+
+# Frozen site output
+immercv/freeze/
