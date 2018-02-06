@@ -12,7 +12,7 @@
       {% include 'cvgraph/_node_detail_link.html' with absolute=True url='cvgraph:experience_detail' node=node text="Read more" slugtext=node.title class="btn btn-primary btn-sm" %}
     </div>
     <div class="visible-print-block card-text">
-      <small><em><a href="http://{{ request.META.HTTP_HOST }}{% url 'cvgraph:cv_detail' id=cv|node_id slug=cv.name|slugify %}">View this CV online</a> to read more.</em></small>
+      <small><em><a href="http://{{ HTTP_HOST }}{% url 'cvgraph:cv_detail' id=cv|node_id slug=cv.name|slugify %}">View this CV online</a> to read more.</em></small>
     </div>
   </div>
 </div>

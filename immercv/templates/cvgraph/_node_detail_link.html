@@ -1,8 +1,8 @@
 {% load cvgraph_tags %}
 {% spaceless %}
   {% if slugtext %}
-    <a href="{% if absolute %}http://{{ request.META.HTTP_HOST }}{% endif %}{% url url id=node|node_id slug=slugtext|slugify %}" class="{{ class }}">{{ text }}</a>
+    <a href="{% if absolute %}http://{{ HTTP_HOST }}{% endif %}{% url url id=node|node_id slug=slugtext|slugify %}" class="{{ class }}">{{ text }}</a>
   {% else %}
-    <a href="{% if absolute %}http://{{ request.META.HTTP_HOST }}{% endif %}{% url url id=node|node_id slug=text|slugify %}" class="{{ class }}">{{ text }}</a>
+    <a href="{% if absolute %}http://{{ HTTP_HOST }}{% endif %}{% url url id=node|node_id slug=text|slugify %}" class="{{ class }}">{{ text }}</a>
   {% endif %}
 {% endspaceless %}

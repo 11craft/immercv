@@ -16,10 +16,12 @@
     {% if role.companies %}
       {% with company=role.companies.single.0 %}
         <h2>{% include 'cvgraph/_node_detail_link.html' with url='cvgraph:company_detail' node=company text=company.name %}</h2>
-        {% cvgraph_node_delete "button" company %}
-        {% cvgraph_node_delete "editor" company %}
-        {% cvgraph_node_unlink "button" role "companies" company %}
-        {% cvgraph_node_unlink "editor" role "companies" company %}
+        {% if user.is_authenticated %}
+          {% cvgraph_node_delete "button" company %}
+          {% cvgraph_node_delete "editor" company %}
+          {% cvgraph_node_unlink "button" role "companies" company %}
+          {% cvgraph_node_unlink "editor" role "companies" company %}
+        {% endif %}
       {% endwith %}
     {% else %}
       {% if user.is_authenticated %}

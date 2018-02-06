@@ -7,19 +7,29 @@
         <small class="text-muted">{{ dates.start_date.year }}-{{ end_date.year }}</small>
       {% endwith %}
     </div>
-    <strong>{% include 'cvgraph/_node_detail_link.html' with absolute=True url='cvgraph:project_detail' node=node text=node.name %}</strong>
+    <div>
+      <strong>{% include 'cvgraph/_node_detail_link.html' with absolute=True url='cvgraph:project_detail' node=node text=node.name %}</strong>
+    </div>
+    {% for role in node.roles %}
+      <div>
+        {% include 'cvgraph/_node_detail_link.html' with absolute=True url='cvgraph:role_detail' node=role text=role %}
+      </div>
+    {% endfor %}
     {% with topics=node|cvgraph_deep_topics %}
       {% if topics %}
-        <br>
+        <div>
         {% for topic in topics %}
           <span class="tag tag-primary">
             {% include 'cvgraph/_node_detail_link.html' with url='cvgraph:topic_detail' node=topic text=topic.name %}
           </span>
         {% endfor %}
+        </div>
       {% endif %}
     {% endwith %}
     {% if node.description %}
-      {{ node.description|markdown }}
+      <div>
+        {{ node.description|markdown }}
+      </div>
     {% endif %}
   </div>
 {% endwith %}

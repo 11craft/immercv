@@ -1,5 +1,6 @@
 from urllib.parse import urlsplit
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.utils.text import slugify
@@ -68,6 +69,7 @@ class CvgraphModelDetailView(TemplateView):
         data = super().get_context_data(**kwargs)
         node = get_node_by_id(self.model, int(self.kwargs['id']))
         data[self.context_name] = node
+        data['HTTP_HOST'] = getattr(settings, 'STATIC_SITE_HTTP_HOST', self.request.META['HTTP_HOST'])
         return data
 
     def get_template_names(self):

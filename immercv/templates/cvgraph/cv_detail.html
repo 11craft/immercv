@@ -42,8 +42,8 @@
       Prepared for {{ cv.name }}{% if cv.date %} on {{ cv.date }}{% endif %}.
       <div class="visible-print-block">
         Visit the <em>ImmerCV</em> version at
-        <a href="http://{{ request.META.HTTP_HOST }}{% url 'cvgraph:cv_detail' id=cv|node_id slug=cv.name|slugify %}">
-          http://{{ request.META.HTTP_HOST }}{% url 'cvgraph:cv_detail' id=cv|node_id slug=cv.name|slugify %}
+        <a href="http://{{ HTTP_HOST }}{% url 'cvgraph:cv_detail' id=cv|node_id slug=cv.name|slugify %}">
+          http://{{ HTTP_HOST }}{% url 'cvgraph:cv_detail' id=cv|node_id slug=cv.name|slugify %}
         </a>
       </div>
     </footer>

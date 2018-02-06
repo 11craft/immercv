@@ -51,3 +51,5 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 FREEZE_SITE_URL = 'http://docker.dev:8000'
 FREEZE_STATIC_ROOT = STATICFILES_DIRS[0]
 FREEZE_INCLUDE_STATIC = True
+
+STATIC_SITE_HTTP_HOST = 'cv.11craft.com'
